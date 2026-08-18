@@ -364,6 +364,139 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       color: #e8e8f0;
     }
+
+    /* Developer & Contact Card */
+    .contact-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(0, 210, 255, 0.25);
+      border-radius: 18px;
+      padding: 24px 28px;
+      margin-top: 36px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(0, 210, 255, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .contact-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .contact-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0, 210, 255, 0.2), rgba(123, 47, 247, 0.2));
+      border: 1px solid rgba(0, 210, 255, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .contact-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #00d2ff;
+      margin-bottom: 2px;
+    }
+    .contact-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .contact-role {
+      font-size: 12.5px;
+      color: #94a3b8;
+    }
+    .contact-links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      text-decoration: none;
+      color: #e2e8f0;
+      transition: all 0.25s ease;
+    }
+    .contact-btn:hover {
+      background: rgba(0, 210, 255, 0.1);
+      border-color: rgba(0, 210, 255, 0.4);
+      transform: translateY(-2px);
+    }
+    .contact-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .contact-btn-text {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .contact-btn-label {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+    .contact-btn-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: #00d2ff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Dashboard Footer */
+    .dash-footer {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .dash-footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 12.5px;
+      color: #64748b;
+    }
+    .dash-footer-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .dash-footer-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .dash-footer-links a:hover {
+      color: #00d2ff;
+    }
   </style>
 </head>
 <body>
@@ -691,6 +824,58 @@
       <a href="/skill-gap" class="btn btn-secondary">📊 Skill Gap Analyzer</a>
       <a href="/predict" class="btn btn-secondary">🎯 Predict Interview Questions</a>
     </div>
+
+    <!-- Developer & Contact Details Section -->
+    <div class="contact-card">
+      <div class="contact-header">
+        <div class="contact-avatar">👨‍💻</div>
+        <div class="contact-info">
+          <div class="contact-badge">Developer & Contact Info</div>
+          <h3 class="contact-name">Nishant Jadhav</h3>
+          <p class="contact-role">Full Stack & AI Engineer &bull; CareerMate.AI Creator</p>
+        </div>
+      </div>
+      <div class="contact-links-grid">
+        <a href="mailto:nishantjadhav8105@gmail.com" class="contact-btn contact-btn-email" title="Send email to Nishant Jadhav">
+          <span class="contact-icon">✉️</span>
+          <div class="contact-btn-text">
+            <span class="contact-btn-label">Direct Email</span>
+            <span class="contact-btn-value">nishantjadhav8105@gmail.com</span>
+          </div>
+        </a>
+        <a href="https://github.com/nishant8105" target="_blank" rel="noopener noreferrer" class="contact-btn contact-btn-github" title="Visit GitHub Profile">
+          <span class="contact-icon">🐙</span>
+          <div class="contact-btn-text">
+            <span class="contact-btn-label">GitHub Profile</span>
+            <span class="contact-btn-value">github.com/nishant8105</span>
+          </div>
+        </a>
+        <a href="https://github.com/nishant8105/CareerMate.AI" target="_blank" rel="noopener noreferrer" class="contact-btn contact-btn-repo" title="View Source Repository">
+          <span class="contact-icon">⭐</span>
+          <div class="contact-btn-text">
+            <span class="contact-btn-label">GitHub Repository</span>
+            <span class="contact-btn-value">CareerMate.AI</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Dashboard Site Footer -->
+    <footer class="dash-footer">
+      <div class="dash-footer-content">
+        <div class="dash-footer-left">
+          <span>&copy; 2026 <strong>CareerMate.AI</strong> &bull; Developed by <a href="mailto:nishantjadhav8105@gmail.com" style="color: #00d2ff; text-decoration: none; font-weight: 500;">Nishant Jadhav</a> (nishantjadhav8105@gmail.com)</span>
+        </div>
+        <div class="dash-footer-links">
+          <a href="/">Home</a>
+          <a href="/ats">ATS Scanner</a>
+          <a href="/resume/builder">Resume Builder</a>
+          <a href="/interview-sim">Mock Interview</a>
+          <a href="/skill-gap">Skill Gap</a>
+          <a href="mailto:nishantjadhav8105@gmail.com">Contact Developer</a>
+        </div>
+      </div>
+    </footer>
 
   </div>
 
