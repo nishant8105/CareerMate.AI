@@ -101,6 +101,7 @@ body::before {
 .brand-logo .brand-ai {
   color: var(--accent-cyan);
   background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -388,6 +389,7 @@ body::before {
 
 .gradient-text {
   background: linear-gradient(135deg, #00d2ff 0%, #a855f7 50%, #00e68a 100%);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
