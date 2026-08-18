@@ -1,4 +1,4 @@
-{
+{ 
   "Python Developer": [
     "Explain how Python's memory management and garbage collection (reference counting & cyclic GC) work.",
     "What is the Global Interpreter Lock (GIL), and how does it impact multi-threaded CPU-bound programs in Python?",

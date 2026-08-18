@@ -97,7 +97,7 @@ body::before {
   width: auto;
   border-radius: 8px;
 }
-
+ 
 .brand-logo .brand-ai {
   color: var(--accent-cyan);
   background: linear-gradient(135deg, #00d2ff, #7b2ff7);

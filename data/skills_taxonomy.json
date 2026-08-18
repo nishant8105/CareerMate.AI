@@ -1,5 +1,5 @@
 {
-  "languages": [
+  "languages": [ 
     "Python", "JavaScript", "TypeScript", "Java", "C++", "C#", "C", "Go", "Rust", "Ruby",
     "PHP", "Swift", "Kotlin", "SQL", "R", "HTML5", "CSS3", "Bash", "Shell", "Dart", "Scala"
   ],

@@ -4,6 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Career Dashboard — CareerMate AI</title>
+  
+  <!-- Favicon & App Icons -->
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/icon.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='assets/icon.png') }}">
+  
+  <!-- Open Graph & Meta Data -->
+  <meta property="og:title" content="Career Dashboard — CareerMate AI">
+  <meta property="og:description" content="Candidate Career Intelligence Dashboard - Aggregated metrics across resume, skills, and mock interviews.">
+  <meta property="og:image" content="{{ url_for('static', filename='assets/icon.png') }}">
+  
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
   <style>
     * {

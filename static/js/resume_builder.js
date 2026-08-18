@@ -4,7 +4,7 @@
  * AI generation/suggestions, template switching, PDF download
  */
 
-// ===== State =====
+// ===== State ===== 
 let currentStep = 0;
 let currentTemplate = 'classic';
 let previewDebounceTimer = null;
