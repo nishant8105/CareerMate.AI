@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interview Simulation Report & Evaluation — CareerMate AI</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #0a0a0f;
+      color: #e8e8f0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 15% 30%, rgba(0, 210, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 70%, rgba(123, 47, 247, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .logo-link img {
+      height: 36px;
+    }
+    .hero-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .score-circle-container {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+    .score-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 34px;
+      box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+    }
+    .score-high {
+      background: radial-gradient(circle, rgba(0, 230, 138, 0.2) 0%, rgba(10, 10, 15, 0.9) 100%);
+      border: 4px solid #00e68a;
+      color: #00e68a;
+    }
+    .score-med {
+      background: radial-gradient(circle, rgba(255, 179, 71, 0.2) 0%, rgba(10, 10, 15, 0.9) 100%);
+      border: 4px solid #ffb347;
+      color: #ffb347;
+    }
+    .score-low {
+      background: radial-gradient(circle, rgba(255, 77, 106, 0.2) 0%, rgba(10, 10, 15, 0.9) 100%);
+      border: 4px solid #ff4d6a;
+      color: #ff4d6a;
+    }
+    .score-circle span.label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.8;
+    }
+    .hero-meta h1 {
+      font-size: 22px;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .hero-meta p {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    /* Sub-scores Grid */
+    .sub-scores-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .sub-card {
+      background: rgba(20, 20, 35, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .sub-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .sub-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+    .sub-card-score {
+      font-size: 15px;
+      font-weight: 700;
+      color: #00d2ff;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+      transition: width 0.8s ease-in-out;
+    }
+
+    /* Executive Feedback Box */
+    .summary-box {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(0, 210, 255, 0.35);
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .summary-box-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #00d2ff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #e2e8f0;
+      margin-bottom: 14px;
+    }
+    .guidance-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .guidance-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .guide-col h4 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .guide-list {
+      list-style: none;
+      padding: 0;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+    .guide-list li {
+      margin-bottom: 6px;
+      position: relative;
+      padding-left: 18px;
+      line-height: 1.4;
+    }
+    .guide-list.strengths li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #00e68a;
+      font-weight: bold;
+    }
+    .guide-list.improvements li::before {
+      content: '⚡';
+      position: absolute;
+      left: 0;
+    }
+
+    /* Per-Question Accordion */
+    .qa-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+      transition: all 0.2s;
+    }
+    .qa-card:hover {
+      border-color: rgba(0, 210, 255, 0.3);
+    }
+    .qa-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+    .qa-meta-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      flex: 1;
+    }
+    .qa-num {
+      background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+      color: #000;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .qa-question {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.5;
+    }
+    .qa-score-badge {
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-score-high { background: rgba(0, 230, 138, 0.2); color: #00e68a; border: 1px solid rgba(0, 230, 138, 0.4); }
+    .badge-score-med { background: rgba(255, 179, 71, 0.2); color: #ffb347; border: 1px solid rgba(255, 179, 71, 0.4); }
+    .badge-score-low { background: rgba(255, 77, 106, 0.2); color: #ff4d6a; border: 1px solid rgba(255, 77, 106, 0.4); }
+
+    .qa-answer-box {
+      background: rgba(10, 15, 29, 0.85);
+      border-left: 3px solid #00d2ff;
+      border-radius: 0 10px 10px 0;
+      padding: 14px;
+      margin-top: 10px;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+    }
+
+    /* Feedback Drawer */
+    .feedback-drawer {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .feedback-toggle-btn {
+      background: none;
+      border: none;
+      color: #00d2ff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0;
+      margin-bottom: 10px;
+    }
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 12.5px;
+      color: #cbd5e1;
+    }
+    @media (max-width: 600px) {
+      .feedback-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .fb-metric {
+      margin-bottom: 8px;
+    }
+    .fb-metric-label {
+      font-weight: 600;
+      color: #fff;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .fb-metric-text {
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    .actions-bar {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 36px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0, 210, 255, 0.25);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(0, 210, 255, 0.35);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e8e8f0;
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header-bar">
+      <a href="/" class="logo-link">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo">
+        <span>CareerMate<span style="color: #00d2ff;">.AI</span></span>
+      </a>
+      <a href="/interview-sim" class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;">🔄 New Simulation</a>
+    </div>
+
+    <!-- Aggregate Score Card -->
+    {% set overall = report.overall_score if report.overall_score is defined else 75 %}
+    <div class="hero-card">
+      <div class="score-circle-container">
+        <div class="score-circle {% if overall >= 80 %}score-high{% elif overall >= 60 %}score-med{% else %}score-low{% endif %}">
+          {{ overall }}%
+          <span class="label">Interview Score</span>
+        </div>
+        <div class="hero-meta">
+          <h1>Interview Simulation Performance Report</h1>
+          <p>Target Role: <strong style="color: #fff;">{{ session_data.role }}</strong> | Evaluated: <strong style="color: #00e68a;">{{ session_data.answers|length }} Questions</strong></p>
+        </div>
+      </div>
+      <div>
+        <a href="/interview-sim" class="btn btn-primary">🚀 Retake Simulation</a>
+      </div>
+    </div>
+
+    <!-- 4 Rubric Sub-scores -->
+    {% if report %}
+    <div class="sub-scores-grid">
+      <div class="sub-card">
+        <div class="sub-card-header">
+          <span class="sub-card-title">🧠 Technical Clarity</span>
+          <span class="sub-card-score">{{ report.technical_clarity_avg|default(7.5) }} / 10</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: {{ (report.technical_clarity_avg|default(7.5) * 10)|round }}%;"></div>
+        </div>
+      </div>
+
+      <div class="sub-card">
+        <div class="sub-card-header">
+          <span class="sub-card-title">💬 Communication</span>
+          <span class="sub-card-score">{{ report.communication_avg|default(8.0) }} / 10</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: {{ (report.communication_avg|default(8.0) * 10)|round }}%;"></div>
+        </div>
+      </div>
+
+      <div class="sub-card">
+        <div class="sub-card-header">
+          <span class="sub-card-title">📐 Structure & STAR</span>
+          <span class="sub-card-score">{{ report.structure_avg|default(7.0) }} / 10</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: {{ (report.structure_avg|default(7.0) * 10)|round }}%;"></div>
+        </div>
+      </div>
+
+      <div class="sub-card">
+        <div class="sub-card-header">
+          <span class="sub-card-title">🎯 Textual Confidence</span>
+          <span class="sub-card-score">{{ report.confidence_avg|default(7.5) }} / 10</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: {{ (report.confidence_avg|default(7.5) * 10)|round }}%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Executive Summary Box -->
+    <div class="summary-box">
+      <div class="summary-box-title">
+        <span>💡</span>
+        <span>Executive Interview Summary</span>
+      </div>
+      <p class="summary-text">{{ report.executive_summary }}</p>
+
+      <div class="guidance-grid">
+        <div class="guide-col">
+          <h4 style="color: #00e68a;">✓ Core Strengths Identified:</h4>
+          <ul class="guide-list strengths">
+            {% for strg in report.top_strengths %}
+              <li>{{ strg }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="guide-col">
+          <h4 style="color: #ffb347;">⚡ Key Improvement Guidance:</h4>
+          <ul class="guide-list improvements">
+            {% for imp in report.key_improvement_areas %}
+              <li>{{ imp }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Per-Question Rubric Breakdown -->
+    <h2 style="color: #00d2ff; font-size: 18px; margin-bottom: 16px; font-weight: 700;">📝 Per-Question Evaluation Breakdown</h2>
+
+    {% for item in session_data.answers %}
+    {% set eval = item.evaluation if item.evaluation is defined else {} %}
+    {% set qscore = eval.score|default(75) %}
+    <div class="qa-card">
+      <div class="qa-header">
+        <div class="qa-meta-left">
+          <span class="qa-num">Q{{ item.question_index }}</span>
+          <h3 class="qa-question">{{ item.question }}</h3>
+        </div>
+        <span class="qa-score-badge {% if qscore >= 80 %}badge-score-high{% elif qscore >= 60 %}badge-score-med{% else %}badge-score-low{% endif %}">
+          {% if eval.is_skipped %}Skipped{% else %}Score: {{ eval.overall_10|default(7.5) }} / 10{% endif %}
+        </span>
+      </div>
+
+      <div class="qa-answer-box">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #00d2ff; font-weight: 700; display: block; margin-bottom: 4px;">Candidate Response:</span>
+        {{ item.answer }}
+      </div>
+
+      <!-- Expandable Feedback Drawer -->
+      <div class="feedback-drawer">
+        <button type="button" class="feedback-toggle-btn" onclick="toggleDrawer('drawer-{{ loop.index }}')">
+          <span>🔍 View Detailed AI Feedback & Rubric Breakdown ▼</span>
+        </button>
+
+        <div id="drawer-{{ loop.index }}" style="display: block;">
+          {% if eval and not eval.is_skipped %}
+          <div class="feedback-grid">
+            <div class="fb-metric">
+              <span class="fb-metric-label">🧠 Technical Clarity ({{ eval.technical_clarity.score }}/10):</span>
+              <span class="fb-metric-text">{{ eval.technical_clarity.feedback }}</span>
+            </div>
+            
+            <div class="fb-metric">
+              <span class="fb-metric-label">💬 Communication ({{ eval.communication.score }}/10):</span>
+              <span class="fb-metric-text">{{ eval.communication.feedback }}</span>
+            </div>
+
+            <div class="fb-metric">
+              <span class="fb-metric-label">📐 Structure / STAR Flow ({{ eval.structure.score }}/10):</span>
+              <span class="fb-metric-text">{{ eval.structure.feedback }}</span>
+            </div>
+
+            <div class="fb-metric">
+              <span class="fb-metric-label">🎯 Assertiveness & Tone ({{ eval.confidence.score }}/10):</span>
+              <span class="fb-metric-text">{{ eval.confidence.feedback }}</span>
+            </div>
+          </div>
+
+          {% if eval.improvements %}
+          <div style="margin-top: 10px; font-size: 12px; color: #ffb347;">
+            <strong>Suggested Enhancement:</strong> {{ eval.improvements[0] }}
+          </div>
+          {% endif %}
+
+          {% else %}
+            <p style="font-size: 12px; color: #94a3b8;">Question was skipped or evaluated without detailed critique.</p>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+    {% endfor %}
+
+    <!-- Actions -->
+    <div class="actions-bar">
+      <a href="/interview-sim" class="btn btn-primary">🔄 Retake Interview Simulation</a>
+      <a href="/interview-prep" class="btn btn-secondary">🎯 Role Question Bank</a>
+      <a href="/resume/builder" class="btn btn-secondary">🛠 Polish in Resume Builder</a>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleDrawer(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+  </script>
+</body>
+</html>

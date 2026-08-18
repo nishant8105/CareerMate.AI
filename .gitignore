@@ -1,0 +1,8 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+resume.pdf
+_test_resume.pdf
+instance/
+nltk_data/

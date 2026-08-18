@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Career History & Records — CareerMate AI</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #0a0a0f;
+      color: #e8e8f0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding: 30px 20px 80px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 15% 20%, rgba(0, 210, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 80%, rgba(123, 47, 247, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .logo-link img {
+      height: 36px;
+    }
+    .hero-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 28px 32px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(0,210,255,0.2), rgba(123,47,247,0.2));
+      border: 1px solid rgba(0, 210, 255, 0.4);
+      color: #00d2ff;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .hero-title {
+      font-size: 26px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .hero-desc {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    /* History Category Tabs */
+    .history-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 12px;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(0,210,255,0.2), rgba(123,47,247,0.2));
+      border-color: rgba(0, 210, 255, 0.4);
+      color: #00d2ff;
+    }
+
+    /* Tab Content Cards */
+    .tab-pane {
+      display: none;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+
+    .record-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      transition: all 0.2s;
+    }
+    .record-card:hover {
+      border-color: rgba(0, 210, 255, 0.3);
+    }
+    .rec-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .score-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .badge-high { background: rgba(0, 230, 138, 0.15); border: 2px solid #00e68a; color: #00e68a; }
+    .badge-med { background: rgba(255, 179, 71, 0.15); border: 2px solid #ffb347; color: #ffb347; }
+    .badge-low { background: rgba(255, 77, 106, 0.15); border: 2px solid #ff4d6a; color: #ff4d6a; }
+
+    .rec-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+    .rec-meta {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .btn-view {
+      background: rgba(0, 210, 255, 0.15);
+      border: 1px solid rgba(0, 210, 255, 0.35);
+      color: #00d2ff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-view:hover {
+      background: rgba(0, 210, 255, 0.3);
+    }
+    .empty-history {
+      text-align: center;
+      padding: 40px 20px;
+      background: rgba(20, 20, 35, 0.5);
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header-bar">
+      <a href="/" class="logo-link">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo">
+        <span>CareerMate<span style="color: #00d2ff;">.AI</span></span>
+      </a>
+      <div>
+        <a href="/dashboard" style="color: #00d2ff; font-size: 13.5px; text-decoration: none;">← Back to Dashboard</a>
+      </div>
+    </div>
+
+    <!-- Hero Card -->
+    <div class="hero-card">
+      <div>
+        <span class="badge">📂 Saved Career Records</span>
+        <h1 class="hero-title">Account History</h1>
+        <p class="hero-desc">Review your saved resumes, historical ATS scans, job alignment reports, and interview feedback.</p>
+      </div>
+    </div>
+
+    <!-- History Tabs -->
+    <div class="history-tabs">
+      <button class="tab-btn active" onclick="switchTab('resumes', this)">📄 Resumes ({{ resumes|length }})</button>
+      <button class="tab-btn" onclick="switchTab('ats', this)">📊 ATS Scans ({{ ats_scans|length }})</button>
+      <button class="tab-btn" onclick="switchTab('jobmatch', this)">💼 Job Matches ({{ job_matches|length }})</button>
+      <button class="tab-btn" onclick="switchTab('interviews', this)">🎙️ Mock Interviews ({{ interview_results|length }})</button>
+      <button class="tab-btn" onclick="switchTab('questions', this)">🎯 Question Sets ({{ question_sets|length }})</button>
+      <button class="tab-btn" onclick="switchTab('skills', this)">🗺️ Skill Progress ({{ skill_progresses|length }})</button>
+    </div>
+
+    <!-- 1. Saved Resumes Tab -->
+    <div id="tab-resumes" class="tab-pane active">
+      {% if resumes %}
+        {% for res in resumes %}
+        <div class="record-card">
+          <div class="rec-left">
+            <span style="font-size: 28px;">📄</span>
+            <div>
+              <div class="rec-title">{{ res.name }}</div>
+              <div class="rec-meta">Template: <strong>{{ res.template|title }}</strong> &bull; Updated: {{ res.updated_at.strftime('%b %d, %Y at %I:%M %p') if res.updated_at else 'Recent' }}</div>
+            </div>
+          </div>
+          <div>
+            <a href="/resume/builder" class="btn-view">Edit in Builder →</a>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-history">
+          <p style="margin-bottom: 12px;">No custom resumes saved to your account yet.</p>
+          <a href="/resume/builder" class="btn-view">🛠 Create a Resume in Builder</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- 2. ATS Scans Tab -->
+    <div id="tab-ats" class="tab-pane">
+      {% if ats_scans %}
+        {% for scan in ats_scans %}
+        {% set score = scan.overall_score %}
+        <div class="record-card">
+          <div class="rec-left">
+            <div class="score-badge {% if score >= 80 %}badge-high{% elif score >= 60 %}badge-med{% else %}badge-low{% endif %}">
+              {{ score }}%
+            </div>
+            <div>
+              <div class="rec-title">{{ scan.filename }}</div>
+              <div class="rec-meta">Scanned on {{ scan.created_at.strftime('%b %d, %Y at %I:%M %p') }}</div>
+            </div>
+          </div>
+          <div>
+            <a href="/ats/history/{{ scan.id }}" class="btn-view">View Full Report →</a>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-history">
+          <p style="margin-bottom: 12px;">No historical ATS scans found for this account.</p>
+          <a href="/ats" class="btn-view">🚀 Run ATS Resume Scan</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- 3. Job Match History Tab -->
+    <div id="tab-jobmatch" class="tab-pane">
+      {% if job_matches %}
+        {% for jm in job_matches %}
+        {% set jmpct = jm.match_percent %}
+        <div class="record-card">
+          <div class="rec-left">
+            <div class="score-badge {% if jmpct >= 75 %}badge-high{% elif jmpct >= 50 %}badge-med{% else %}badge-low{% endif %}">
+              {{ jmpct }}%
+            </div>
+            <div>
+              <div class="rec-title">{{ jm.target_role }} Alignment</div>
+              <div class="rec-meta">Analyzed on {{ jm.created_at.strftime('%b %d, %Y at %I:%M %p') }}</div>
+            </div>
+          </div>
+          <div>
+            <a href="/job-match/history/{{ jm.id }}" class="btn-view">View Full Analysis →</a>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-history">
+          <p style="margin-bottom: 12px;">No job description match analyses saved yet.</p>
+          <a href="/job-match" class="btn-view">🎯 Match a Job Description</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- 4. Mock Interviews Tab -->
+    <div id="tab-interviews" class="tab-pane">
+      {% if interview_results %}
+        {% for ir in interview_results %}
+        {% set sc = ir.overall_score %}
+        <div class="record-card">
+          <div class="rec-left">
+            <div class="score-badge {% if sc >= 80 %}badge-high{% elif sc >= 60 %}badge-med{% else %}badge-low{% endif %}">
+              {{ sc }}%
+            </div>
+            <div>
+              <div class="rec-title">{{ ir.role }} Mock Interview</div>
+              <div class="rec-meta">Completed on {{ ir.created_at.strftime('%b %d, %Y at %I:%M %p') }}</div>
+            </div>
+          </div>
+          <div>
+            <a href="/interview-sim/history/{{ ir.id }}" class="btn-view">View QA Transcript →</a>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-history">
+          <p style="margin-bottom: 12px;">No completed interview simulator transcripts on record.</p>
+          <a href="/interview-sim" class="btn-view">🎙️ Start a Mock Interview</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- 5. Question Sets Tab -->
+    <div id="tab-questions" class="tab-pane">
+      {% if question_sets %}
+        {% for qs in question_sets %}
+        <div class="record-card">
+          <div class="rec-left">
+            <span style="font-size: 28px;">🎯</span>
+            <div>
+              <div class="rec-title">{{ qs.role }} Question Bank</div>
+              <div class="rec-meta">Saved on {{ qs.created_at.strftime('%b %d, %Y at %I:%M %p') }}</div>
+            </div>
+          </div>
+          <div>
+            <a href="/interview-prep" class="btn-view">Open Prep Hub →</a>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-history">
+          <p style="margin-bottom: 12px;">No question banks bookmarked yet.</p>
+          <a href="/interview-prep" class="btn-view">🎯 Generate Interview Questions</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- 6. Skill Progress Tab -->
+    <div id="tab-skills" class="tab-pane">
+      {% if skill_progresses %}
+        {% for sp in skill_progresses %}
+        {% set spcov = sp.coverage_percent %}
+        <div class="record-card">
+          <div class="rec-left">
+            <div class="score-badge {% if spcov >= 75 %}badge-high{% elif spcov >= 45 %}badge-med{% else %}badge-low{% endif %}">
+              {{ spcov }}%
+            </div>
+            <div>
+              <div class="rec-title">{{ sp.target_role }} Career Track</div>
+              <div class="rec-meta">{{ sp.get_known_skills()|length }} Verified Skills &bull; Updated {{ sp.updated_at.strftime('%b %d, %Y') }}</div>
+            </div>
+          </div>
+          <div>
+            <a href="/roadmap/{{ sp.target_role }}" class="btn-view">View Stage Timeline →</a>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-history">
+          <p style="margin-bottom: 12px;">No skill gap analyses recorded yet.</p>
+          <a href="/skill-gap" class="btn-view">📊 Evaluate Skill Gaps</a>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <script>
+    function switchTab(name, btn) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+      const targetPane = document.getElementById('tab-' + name);
+      if (targetPane) targetPane.classList.add('active');
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+{
+  "Python Developer": [
+    "Explain how Python's memory management and garbage collection (reference counting & cyclic GC) work.",
+    "What is the Global Interpreter Lock (GIL), and how does it impact multi-threaded CPU-bound programs in Python?",
+    "Explain the difference between generators and iterators. When would you use generator expressions over list comprehensions?",
+    "How do Python decorators work under the hood? Write a decorator that measures execution time of a function.",
+    "Describe the differences between `*args` and `**kwargs` and how method resolution order (MRO) works in multiple inheritance.",
+    "How does asyncio event loop scheduling work in Python compared to threading and multiprocessing?",
+    "Explain context managers and how you would implement one using the `__enter__` and `__exit__` magic methods.",
+    "What are metaclasses in Python and in what scenarios would you need to define a custom metaclass?",
+    "How would you optimize a Python backend API experiencing high latency and database bottlenecks?",
+    "Explain the differences between deep copy and shallow copy in Python with mutable nested objects."
+  ],
+  "Data Scientist": [
+    "Explain the bias-variance tradeoff and how regularization (L1/L2) helps prevent overfitting.",
+    "How do you handle severe class imbalance in a classification dataset? Compare SMOTE, focal loss, and class weighting.",
+    "Explain how ROC-AUC is calculated and when Precision-Recall curves are more informative.",
+    "How does the Random Forest algorithm differ from Gradient Boosting (XGBoost/LightGBM) in terms of bagging vs boosting?",
+    "Describe the mathematical intuition behind PCA (Principal Component Analysis) and how you select the number of components.",
+    "How would you design and evaluate an A/B test for a new recommendation algorithm to ensure statistical significance?",
+    "Explain the difference between parametric and non-parametric statistical hypothesis tests with examples.",
+    "How do you detect and treat data leakage and multicollinearity before deploying predictive models?",
+    "Explain how cross-validation strategies should be adapted for time-series data vs independent observations.",
+    "Describe how SHAP and LIME values work for explaining black-box model predictions to business stakeholders."
+  ],
+  "ML Engineer": [
+    "How do you architect an end-to-end ML training and serving pipeline using MLOps tools (e.g. MLflow, Kubeflow)?",
+    "Explain how gradient descent variants (Adam, RMSprop, SGD with momentum) update weights and manage learning rates.",
+    "How do you optimize deep learning model inference for low-latency production environments (ONNX, TensorRT, Quantization)?",
+    "Describe the Transformer architecture: self-attention mechanism, multi-head attention, and positional encoding.",
+    "How do you detect and mitigate data drift and concept drift in a deployed production machine learning model?",
+    "Explain the difference between vanishing and exploding gradients in deep networks and how batch normalization and residual connections resolve them.",
+    "How would you design a high-throughput vector search pipeline for a semantic search or Retrieval-Augmented Generation (RAG) system?",
+    "Explain model quantization (FP32 to INT8) and pruning techniques to reduce memory footprint on edge devices.",
+    "How do you ensure zero-downtime canary or blue-green deployments for live machine learning microservices?",
+    "Describe distributed training strategies: Data Parallelism vs Model Parallelism vs Pipeline Parallelism."
+  ],
+  "Web Developer": [
+    "Explain the critical rendering path in modern browsers and how you optimize First Contentful Paint (FCP) and LCP.",
+    "How does the JavaScript event loop handle microtasks (Promises) vs macrotasks (setTimeout, DOM events)?",
+    "Explain Cross-Origin Resource Sharing (CORS), CSRF, and XSS attack vectors and how to defend against them.",
+    "Compare Server-Side Rendering (SSR), Static Site Generation (SSG), and Client-Side Rendering (CSR) trade-offs.",
+    "How do web sockets differ from Server-Sent Events (SSE) and HTTP/2 long-polling for real-time bidirectional data?",
+    "Describe how modern CSS Flexbox and Grid layouts differ and how you implement fluid responsive designs.",
+    "Explain the purpose and mechanics of React's Virtual DOM, reconciliation algorithm, and Fiber architecture.",
+    "How do you manage complex application state (Redux, Zustand, Context API) to avoid unnecessary component re-renders?",
+    "Describe how browser caching headers (Cache-Control, ETag, Stale-While-Revalidate) impact CDN and web asset delivery.",
+    "Explain RESTful API design best practices vs GraphQL query resolution and single-endpoint architecture."
+  ],
+  "Data Analyst": [
+    "Explain SQL window functions (`ROW_NUMBER()`, `RANK()`, `DENSE_RANK()`, `LEAD()`, `LAG()`) and provide practical use cases.",
+    "How do you differentiate between correlation and causation when presenting business insights to leadership?",
+    "Describe your end-to-end workflow for cleaning and restructuring messy transactional datasets using Pandas/SQL.",
+    "How do you design an effective executive KPI dashboard in Tableau/Power BI that highlights actionable anomalies?",
+    "Explain cohort analysis and how you calculate user retention and churn rates over specified time intervals.",
+    "What statistical metrics do you monitor to detect outliers and anomalies in financial or operational metrics?",
+    "How do you handle missing values, duplicates, and inconsistent date formats across disparate data sources?",
+    "Explain the difference between STAR schema and Snowflake schema in enterprise data warehousing.",
+    "How would you explain a sudden 20% drop in weekly active users to non-technical product managers?",
+    "Describe how you automate recurring ETL reporting pipelines using Python and SQL schedule scripts."
+  ],
+  "Software Developer": [
+    "Explain the SOLID principles of object-oriented design and give a real-world example of the Dependency Inversion Principle.",
+    "How do you design a scalable microservices architecture that handles distributed database transactions (Saga pattern)?",
+    "Explain the differences between SQL relational databases and NoSQL document/key-value stores in CAP theorem trade-offs.",
+    "How do you implement rate limiting and caching (Redis) to protect public APIs from Denial of Service spikes?",
+    "Explain database indexing (B-Trees vs Hash indexes) and why unindexed queries cause full table scans under load.",
+    "How do you manage database schema migrations safely in a zero-downtime continuous deployment environment?",
+    "Describe your approach to writing comprehensive unit, integration, and end-to-end tests in a CI/CD pipeline.",
+    "Explain the difference between synchronous blocking I/O and asynchronous non-blocking event-driven I/O.",
+    "How do you structure code to handle graceful degradation and circuit breaking when third-party downstream APIs fail?",
+    "Discuss a time when you refactored a monolithic legacy codebase to improve modularity and maintainability."
+  ],
+  "HR_Behavioral": [
+    "Tell me about a time you faced a major technical challenge or tight deadline. How did you prioritize tasks to deliver on time?",
+    "Describe a situation where you had a disagreement with a team member or manager regarding technical architecture. How was it resolved?",
+    "Give an example of a project where requirements changed midway through development. How did you adapt your workflow?",
+    "Tell me about a mistake or production bug you caused. What immediate steps did you take to fix it and prevent recurrence?",
+    "How do you stay updated with emerging technologies and decide which new tools or frameworks are worth adopting?",
+    "Describe a time when you had to explain a complex technical concept to a non-technical stakeholder or client.",
+    "Tell me about a time you took initiative to improve an existing process, tool, or codebase without being asked.",
+    "How do you handle feedback and constructive criticism during code reviews or annual performance appraisals?",
+    "Where do you see yourself professionally in the next 2-3 years, and how does this role align with your aspirations?",
+    "Why are you interested in joining our team, and what unique perspective or skillset will you contribute?"
+  ]
+}

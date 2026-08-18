@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Question Predictor 2.0 — CareerMate AI</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/predict.css') }}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      overflow-y: auto !important;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(0,210,255,0.2), rgba(123,47,247,0.2));
+      border: 1px solid rgba(0, 210, 255, 0.4);
+      color: #00d2ff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .config-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 26px;
+      max-width: 780px;
+      margin: 20px auto;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(20px);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #00d2ff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .select-input {
+      width: 100%;
+      background: rgba(10, 15, 29, 0.9);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+    .select-input:focus {
+      border-color: #00d2ff;
+    }
+    .session-toggle {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-top: 14px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .session-toggle input {
+      accent-color: #00d2ff;
+      width: 16px;
+      height: 16px;
+    }
+    .flash-messages {
+      max-width: 600px;
+      margin: 15px auto;
+      text-align: center;
+    }
+    .flash-msg {
+      background: rgba(255, 77, 106, 0.2);
+      border: 1px solid rgba(255, 77, 106, 0.4);
+      color: #ff99aa;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    /* Results Section */
+    .results-container {
+      max-width: 900px;
+      margin: 30px auto;
+      text-align: left;
+    }
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: rgba(20, 20, 35, 0.85);
+      padding: 18px 22px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .results-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .diff-tag {
+      padding: 3px 9px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .diff-easy { background: rgba(0, 230, 138, 0.2); color: #00e68a; border: 1px solid rgba(0, 230, 138, 0.4); }
+    .diff-medium { background: rgba(255, 179, 71, 0.2); color: #ffb347; border: 1px solid rgba(255, 179, 71, 0.4); }
+    .diff-hard { background: rgba(255, 77, 106, 0.2); color: #ff4d6a; border: 1px solid rgba(255, 77, 106, 0.4); }
+    .type-tag {
+      background: rgba(0, 210, 255, 0.15);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      color: #00d2ff;
+      padding: 3px 9px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* Collapsible Concept Accordions */
+    .concept-group {
+      margin-bottom: 20px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.7);
+    }
+    .concept-header {
+      background: rgba(20, 20, 35, 0.9);
+      padding: 14px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .concept-header:hover {
+      background: rgba(30, 30, 50, 0.95);
+    }
+    .concept-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #00d2ff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .concept-count {
+      font-size: 12px;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .concept-icon {
+      font-size: 12px;
+      color: #94a3b8;
+      transition: transform 0.3s;
+    }
+    .concept-group.open .concept-icon {
+      transform: rotate(180deg);
+    }
+    .concept-body {
+      padding: 16px 20px;
+      display: block;
+    }
+    .concept-group:not(.open) .concept-body {
+      display: none;
+    }
+
+    /* Question Cards */
+    .q-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+      transition: all 0.2s ease;
+    }
+    .q-card:last-child {
+      margin-bottom: 0;
+    }
+    .q-card:hover {
+      border-color: rgba(0, 210, 255, 0.35);
+    }
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    .q-badges {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .q-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.5;
+      flex: 1;
+    }
+    
+    /* MCQ Options */
+    .mcq-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    @media (max-width: 600px) {
+      .mcq-options {
+        grid-template-columns: 1fr;
+      }
+    }
+    .mcq-option {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #cbd5e1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+    .mcq-option:hover {
+      background: rgba(0, 210, 255, 0.08);
+      border-color: rgba(0, 210, 255, 0.3);
+    }
+    .mcq-option.selected-correct {
+      background: rgba(0, 230, 138, 0.2) !important;
+      border-color: #00e68a !important;
+      color: #00e68a !important;
+      font-weight: 600;
+    }
+    .mcq-option.selected-wrong {
+      background: rgba(255, 77, 106, 0.2) !important;
+      border-color: #ff4d6a !important;
+      color: #ff99aa !important;
+    }
+    .opt-letter {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-weight: 700;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .mcq-reveal-btn {
+      background: none;
+      border: none;
+      color: #00d2ff;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .mcq-explanation {
+      display: none;
+      background: rgba(0, 210, 255, 0.05);
+      border-left: 3px solid #00d2ff;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e8e8f0;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-download {
+      background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 15px rgba(0, 210, 255, 0.25);
+    }
+    .btn-download:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 210, 255, 0.35);
+    }
+  </style>
+</head>
+
+<body>
+  <video id="background-video" autoplay muted loop>
+    <source src="{{ url_for('static', filename='assets/predict.mp4') }}" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <div id="content-container">
+    <div>
+      <img class="image" src="{{ url_for('static', filename='assets/predict.png') }}" alt="Predictor Image">
+    </div>
+  </div>
+
+  <div id="text-container" class="centered-text">
+    <span class="badge">⚡ Question Predictor 2.0</span>
+    <h1 style="color: #00d2ff; font-size: 26px; margin-bottom: 8px;">Interview Question Predictor</h1>
+    <p style="color: #cbd5e1; font-size: 14px; max-width: 650px; margin: 0 auto;">
+      Anticipate role-specific technical and behavioral questions synthesized and grouped by key resume topics.
+    </p>
+  </div>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for msg in messages %}
+          <div class="flash-msg">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Question Configuration & Upload Card -->
+  <div class="config-card">
+    <form action="/test_generate" method="post" enctype="multipart/form-data">
+      
+      <!-- Upload Zone -->
+      <div id="upload-section" style="width: 100%; margin: 0; padding: 20px;" onclick="document.getElementById('pdf-upload').click()">
+        <p style="font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px;">📄 Select or drop Resume PDF</p>
+        <p id="file-display" style="font-size: 12px; color: #94a3b8;">Click to browse (.pdf)</p>
+        <input type="file" name="pdf_file" id="pdf-upload" accept=".pdf" style="display: none;" onchange="handleFileChange(this)">
+      </div>
+
+      {% if has_last_resume %}
+      <label class="session-toggle">
+        <input type="checkbox" name="use_last_resume" value="yes" id="use-last-resume" onchange="toggleUploadBox(this)">
+        <span>Use my previously uploaded resume</span>
+      </label>
+      {% endif %}
+
+      <!-- Format & Difficulty Selectors -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Question Format</label>
+          <select name="question_type" class="select-input">
+            <option value="long" {% if question_type == 'long' %}selected{% endif %}>📝 Subjective / Long Answer</option>
+            <option value="short" {% if question_type == 'short' %}selected{% endif %}>⚡ Short Answer / Conceptual</option>
+            <option value="mcq" {% if question_type == 'mcq' %}selected{% endif %}>🔘 Multiple Choice (MCQ)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Difficulty Tier</label>
+          <select name="difficulty" class="select-input">
+            <option value="easy" {% if difficulty == 'easy' %}selected{% endif %}>🟢 Easy (Foundational)</option>
+            <option value="medium" {% if not difficulty or difficulty == 'medium' %}selected{% endif %}>🟡 Medium (Standard Interview)</option>
+            <option value="hard" {% if difficulty == 'hard' %}selected{% endif %}>🔴 Hard (Architecture & Edge Cases)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Question Count</label>
+          <select name="no_of_questions" class="select-input">
+            <option value="5">5 Questions</option>
+            <option value="10" selected>10 Questions</option>
+            <option value="15">15 Questions</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="text-align: center;">
+        <input type="submit" class="uploadbutton" id="submit-button" value="⚡ Predict Interview Questions" style="width: auto; padding: 12px 36px; font-weight: bold; background: linear-gradient(135deg, #00d2ff, #7b2ff7); color: #fff;">
+      </div>
+    </form>
+  </div>
+
+  <!-- Generated Questions Section (Grouped by Topic) -->
+  {% if grouped_questions or cresults %}
+  <div class="results-container">
+    
+    <div class="results-header">
+      <div class="results-title">
+        <span>🎯 Predicted Questions ({{ cresults|length }})</span>
+        <span class="diff-tag diff-{{ difficulty|default('medium') }}">{{ difficulty|default('medium') }}</span>
+        <span class="type-tag">{{ question_type|upper }}</span>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <a href="/predict/download-pdf" class="btn-action btn-download">⬇ Download as PDF</a>
+        <button type="button" class="btn-action" onclick="copyAllQuestions()">📋 Copy All</button>
+      </div>
+    </div>
+
+    <!-- Grouped by Concept Accordions -->
+    {% if grouped_questions %}
+      {% for concept, q_list in grouped_questions.items() %}
+      <div class="concept-group open" id="concept-group-{{ loop.index }}">
+        <div class="concept-header" onclick="toggleConcept('concept-group-{{ loop.index }}')">
+          <span class="concept-name">
+            <span>📂</span>
+            <span>{{ concept }}</span>
+            <span class="concept-count">{{ q_list|length }}</span>
+          </span>
+          <span class="concept-icon">▼</span>
+        </div>
+
+        <div class="concept-body">
+          {% for q in q_list %}
+          <div class="q-card">
+            <div class="q-header">
+              <span class="q-text">{{ q.question if q.question is defined else q }}</span>
+              <div class="q-badges">
+                <span class="diff-tag diff-{{ (q.difficulty|default(difficulty))|lower }}">{{ q.difficulty|default(difficulty) }}</span>
+                <span class="type-tag">{{ q.type|default(question_type|upper) }}</span>
+              </div>
+            </div>
+
+            <!-- If MCQ Format -->
+            {% if q.options is defined %}
+              <div class="mcq-options">
+                {% for opt in q.options %}
+                <div class="mcq-option" onclick="checkOption(this, '{{ q.correct_answer|escape }}')">
+                  <span class="opt-letter">{{ ['A','B','C','D'][loop.index0] }}</span>
+                  <span>{{ opt }}</span>
+                </div>
+                {% endfor %}
+              </div>
+
+              <button type="button" class="mcq-reveal-btn" onclick="toggleExplanation('exp-{{ loop.parent.loop.index }}-{{ loop.index }}')">
+                💡 Show Answer & Source Context
+              </button>
+              
+              <div class="mcq-explanation" id="exp-{{ loop.parent.loop.index }}-{{ loop.index }}">
+                <strong style="color: #00e68a;">Correct Answer: ({{ q.correct_letter }}) {{ q.correct_answer }}</strong><br>
+                <span>{{ q.explanation }}</span>
+              </div>
+
+            <!-- If Long/Short Answer Format -->
+            {% else %}
+              <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 12px; color: #64748b;">Practice Tip: Frame your answer with STAR methodology (Situation, Task, Action, Result).</span>
+                <button type="button" class="btn-action" style="padding: 3px 8px; font-size: 11px;" onclick="copySingle('{{ (q.question if q.question is defined else q)|escape }}')">Copy</button>
+              </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
+
+    <div style="text-align: center; margin-top: 30px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+      <a href="/predict/download-pdf" class="uploadbutton" style="text-decoration: none; display: inline-block;">⬇ Export Question Set (PDF)</a>
+      <a href="/resume/builder" class="btn-action" style="padding: 12px 20px;">🛠 Resume Builder</a>
+      <a href="/ats" class="btn-action" style="padding: 12px 20px;">🔍 Check ATS Score</a>
+    </div>
+
+  </div>
+  {% endif %}
+
+  <script>
+    function handleFileChange(input) {
+      const display = document.getElementById('file-display');
+      if (input.files && input.files[0]) {
+        display.textContent = 'Selected: ' + input.files[0].name;
+        display.style.color = '#00e68a';
+      }
+    }
+
+    function toggleUploadBox(checkbox) {
+      const box = document.getElementById('upload-section');
+      if (checkbox.checked) {
+        box.style.opacity = '0.5';
+        box.style.pointerEvents = 'none';
+      } else {
+        box.style.opacity = '1';
+        box.style.pointerEvents = 'auto';
+      }
+    }
+
+    function toggleConcept(groupId) {
+      const el = document.getElementById(groupId);
+      if (el) {
+        el.classList.toggle('open');
+      }
+    }
+
+    function checkOption(el, correctAns) {
+      const parent = el.closest('.mcq-options');
+      const allOpts = parent.querySelectorAll('.mcq-option');
+      allOpts.forEach(o => {
+        o.classList.remove('selected-correct', 'selected-wrong');
+      });
+
+      const selectedText = el.querySelector('span:last-child').textContent.trim();
+      if (selectedText.toLowerCase() === correctAns.toLowerCase()) {
+        el.classList.add('selected-correct');
+      } else {
+        el.classList.add('selected-wrong');
+        allOpts.forEach(o => {
+          if (o.querySelector('span:last-child').textContent.trim().toLowerCase() === correctAns.toLowerCase()) {
+            o.classList.add('selected-correct');
+          }
+        });
+      }
+    }
+
+    function toggleExplanation(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.display = el.style.display === 'block' ? 'none' : 'block';
+      }
+    }
+
+    function copySingle(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Question copied to clipboard!');
+      });
+    }
+
+    function copyAllQuestions() {
+      const cards = document.querySelectorAll('.q-text');
+      const textList = Array.from(cards).map((c, i) => `${i+1}. ${c.textContent.trim()}`).join('\n\n');
+      navigator.clipboard.writeText(textList).then(() => {
+        alert('All questions copied to clipboard!');
+      });
+    }
+  </script>
+</body>
+</html>

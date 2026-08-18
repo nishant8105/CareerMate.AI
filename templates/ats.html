@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATS Resume Analyzer — CareerMate AI</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/predict.css') }}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+    }
+    .ats-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(0,210,255,0.2), rgba(123,47,247,0.2));
+      border: 1px solid rgba(0, 210, 255, 0.4);
+      color: #00d2ff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .feature-points {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+    .feature-item {
+      background: rgba(20, 20, 35, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .flash-messages {
+      width: 50%;
+      margin: 15px auto;
+      text-align: center;
+    }
+    .flash-msg {
+      background: rgba(255, 77, 106, 0.2);
+      border: 1px solid rgba(255, 77, 106, 0.4);
+      color: #ff99aa;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <video id="background-video" autoplay muted loop>
+    <source src="{{ url_for('static', filename='assets/predict.mp4') }}" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <div id="content-container">
+    <div>
+      <img class="image" src="{{ url_for('static', filename='assets/predict.png') }}" alt="ATS Analyzer Image">
+    </div>
+  </div>
+
+  <div id="text-container" class="centered-text">
+    <span class="ats-badge">🎯 ATS Resume Score Check</span>
+    <h1 style="color: #00d2ff; font-size: 28px; margin-bottom: 8px;">ATS Resume Analyzer</h1>
+    <p style="color: #cbd5e1; font-size: 15px; max-width: 650px; margin: 0 auto 15px;">
+      Upload your resume PDF to analyze formatting, keyword density, section completeness, and identify weak spots before applying.
+    </p>
+  </div>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for msg in messages %}
+          <div class="flash-msg">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form id="upload-section" action="/ats/analyze" method="post" enctype="multipart/form-data">
+    <div style="font-size: 42px; margin-bottom: 10px;">📄</div>
+    <p style="margin-bottom: 15px; font-size: 15px; color: #fff;">Select your PDF resume</p>
+    <input class="uploadbutton" type="file" name="pdf_file" id="pdf-upload" accept=".pdf" required>
+    <div id="submit-btn-container">
+      <input type="submit" class="uploadbutton" id="submit-button" value="🔍 Analyze ATS Score" style="font-weight: bold; background: linear-gradient(135deg, #00d2ff, #7b2ff7); color: #fff;">
+    </div>
+  </form>
+
+  <div class="feature-points">
+    <div class="feature-item">📊 0-100 ATS Match Score</div>
+    <div class="feature-item">🔍 Formatting & Section Audit</div>
+    <div class="feature-item">💡 Missing Keywords & Verbs</div>
+    <div class="feature-item">⚡ Instant Actionable Advice</div>
+  </div>
+
+  <div style="text-align: center; margin-top: 30px; margin-bottom: 40px;">
+    <a href="/" style="color: #00d2ff; text-decoration: none; font-size: 14px; font-weight: 500;">← Back to Home</a>
+    <span style="color: #555; margin: 0 10px;">|</span>
+    <a href="/resume/builder" style="color: #00d2ff; text-decoration: none; font-size: 14px; font-weight: 500;">Open Resume Builder →</a>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('pdf-upload');
+    const uploadSection = document.getElementById('upload-section');
+
+    uploadSection.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadSection.style.borderColor = '#00d2ff';
+      uploadSection.style.backgroundColor = 'rgba(0, 210, 255, 0.1)';
+    });
+
+    uploadSection.addEventListener('dragleave', () => {
+      uploadSection.style.borderColor = '#fff';
+      uploadSection.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    });
+
+    uploadSection.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadSection.style.borderColor = '#fff';
+      uploadSection.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+      }
+    });
+  </script>
+</body>
+</html>

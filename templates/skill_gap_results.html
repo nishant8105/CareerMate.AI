@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Gap Analysis Results — CareerMate AI</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #0a0a0f;
+      color: #e8e8f0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 15% 30%, rgba(0, 210, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 70%, rgba(123, 47, 247, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 940px;
+      margin: 0 auto;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .logo-link img {
+      height: 36px;
+    }
+    .hero-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .score-container {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+    .radial-meter {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 32px;
+      box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+    }
+    .score-high {
+      background: radial-gradient(circle, rgba(0, 230, 138, 0.2) 0%, rgba(10, 10, 15, 0.9) 100%);
+      border: 4px solid #00e68a;
+      color: #00e68a;
+    }
+    .score-med {
+      background: radial-gradient(circle, rgba(255, 179, 71, 0.2) 0%, rgba(10, 10, 15, 0.9) 100%);
+      border: 4px solid #ffb347;
+      color: #ffb347;
+    }
+    .score-low {
+      background: radial-gradient(circle, rgba(255, 77, 106, 0.2) 0%, rgba(10, 10, 15, 0.9) 100%);
+      border: 4px solid #ff4d6a;
+      color: #ff4d6a;
+    }
+    .radial-meter span.label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.8;
+    }
+    .hero-meta h1 {
+      font-size: 22px;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .hero-meta p {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    /* Positive Strengths Panel */
+    .strengths-panel {
+      background: rgba(10, 30, 25, 0.85);
+      border: 1px solid rgba(0, 230, 138, 0.35);
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+    .strengths-panel-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #00e68a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .strengths-panel-desc {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-bottom: 12px;
+    }
+
+    /* Learn Next Priority List */
+    .learn-next-box {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(0, 210, 255, 0.35);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .learn-next-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .learn-next-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #00d2ff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .learn-next-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .learn-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+    .learn-card:hover {
+      border-color: rgba(0, 210, 255, 0.4);
+      transform: translateY(-2px);
+    }
+    .learn-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+    .learn-skill-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .priority-badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .p-p1 { background: rgba(255, 77, 106, 0.2); color: #ff8096; border: 1px solid rgba(255, 77, 106, 0.4); }
+    .p-p2 { background: rgba(255, 179, 71, 0.2); color: #ffb347; border: 1px solid rgba(255, 179, 71, 0.4); }
+    .p-p3 { background: rgba(0, 210, 255, 0.15); color: #00d2ff; border: 1px solid rgba(0, 210, 255, 0.3); }
+    .p-p4 { background: rgba(123, 47, 247, 0.2); color: #b18aff; border: 1px solid rgba(123, 47, 247, 0.4); }
+    
+    .learn-stage-note {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+    .learn-link {
+      font-size: 12px;
+      color: #00d2ff;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: auto;
+    }
+    .learn-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Tags Styling */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      padding: 5px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .tag-have {
+      background: rgba(0, 230, 138, 0.15);
+      border: 1px solid rgba(0, 230, 138, 0.35);
+      color: #00e68a;
+    }
+    .tag-missing {
+      background: rgba(255, 77, 106, 0.15);
+      border: 1px solid rgba(255, 77, 106, 0.35);
+      color: #ff99aa;
+    }
+
+    /* Per-Stage Breakdown */
+    .stage-breakdown-box {
+      background: rgba(20, 20, 35, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+    .stage-row {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .stage-row:last-child {
+      margin-bottom: 0;
+    }
+    .stage-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .stage-row-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .stage-row-pct {
+      font-size: 13px;
+      font-weight: 700;
+      color: #00d2ff;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+      border-radius: 3px;
+      transition: width 0.8s ease;
+    }
+
+    /* Actions Bar */
+    .actions-bar {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 36px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0, 210, 255, 0.25);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(0, 210, 255, 0.35);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e8e8f0;
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header-bar">
+      <a href="/" class="logo-link">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo">
+        <span>CareerMate<span style="color: #00d2ff;">.AI</span></span>
+      </a>
+      <a href="/skill-gap" class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;">🔍 Analyze Another Role</a>
+    </div>
+
+    <!-- Hero Card with Radial Score Meter -->
+    {% set pct = results.coverage_percent %}
+    <div class="hero-card">
+      <div class="score-container">
+        <div class="radial-meter {% if pct >= 75 %}score-high{% elif pct >= 45 %}score-med{% else %}score-low{% endif %}">
+          {{ pct }}%
+          <span class="label">Coverage</span>
+        </div>
+        <div class="hero-meta">
+          <h1>{{ results.summary_verdict }}</h1>
+          <p>Target Career: <strong style="color: #fff;">{{ results.target_role }}</strong> | Verified Skills: <strong style="color: #00e68a;">{{ results.have|length }}</strong> / {{ results.all_required|length }} Required</p>
+        </div>
+      </div>
+      <div>
+        <a href="/skill-gap" class="btn btn-primary" style="background: linear-gradient(135deg, #00e68a, #00d2ff); color: #000; font-weight: 700;">
+          🔍 Analyze Another Role
+        </a>
+      </div>
+    </div>
+
+    <!-- Strengths Panel (Positive Framing) -->
+    {% if results.have %}
+    <div class="strengths-panel">
+      <div class="strengths-panel-title">
+        <span>🌟</span>
+        <span>Verified Strengths & Assets ({{ results.have|length }})</span>
+      </div>
+      <p class="strengths-panel-desc">You already possess these core industry competencies required for a {{ results.target_role }}:</p>
+      <div class="tags-container">
+        {% for sk in results.have %}
+          <span class="tag tag-have">✓ {{ sk }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Prioritized 'Learn Next' Ordered List -->
+    {% if results.ranked_learn_next %}
+    <div class="learn-next-box">
+      <div class="learn-next-header">
+        <div class="learn-next-title">
+          <span>🚀</span>
+          <span>Learn Next (Prioritized by Skill Tier)</span>
+        </div>
+      </div>
+
+      <div class="learn-next-grid">
+        {% for item in results.ranked_learn_next %}
+        <div class="learn-card">
+          <div>
+            <div class="learn-card-top">
+              <span class="learn-skill-name">{{ item.skill }}</span>
+              <span class="priority-badge {% if item.tier == 1 %}p-p1{% elif item.tier == 2 %}p-p2{% elif item.tier == 3 %}p-p3{% else %}p-p4{% endif %}">
+                Tier {{ item.tier }}
+              </span>
+            </div>
+            <p class="learn-stage-note">{{ item.priority_label }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Bottom Actions Bar -->
+    <div class="actions-bar">
+      <a href="/interview-sim" class="btn btn-primary" style="background: linear-gradient(135deg, #00e68a, #00d2ff); color: #000; font-weight: 700;">
+        🎙️ Practice Mock Interview
+      </a>
+      <a href="/ats" class="btn btn-secondary">📄 Check Resume ATS Score</a>
+      <a href="/skill-gap" class="btn btn-secondary">🔍 Analyze Another Role</a>
+    </div>
+
+  </div>
+</body>
+</html>

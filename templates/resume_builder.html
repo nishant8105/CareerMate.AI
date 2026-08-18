@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Builder — CareerMate.AI</title>
+    <meta name="description" content="Build a professional resume with AI-powered suggestions, multiple templates, and instant PDF download.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/resume_builder.css') }}">
+</head>
+<body class="resume-builder-page">
+
+    <!-- Top Bar -->
+    <div class="rb-topbar">
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="CareerMate.AI Logo">
+            <span>CareerMate<span class="highlight">.AI</span></span>
+        </a>
+        <div class="rb-topbar-actions">
+            <button type="button" class="rb-btn rb-btn-ai" onclick="fetchFullResumeSuggestions()">💡 Get Suggestions</button>
+            <button type="button" id="download-pdf-btn" class="rb-btn rb-btn-download">⬇ Download PDF</button>
+        </div>
+    </div>
+
+    <!-- Main Split Layout -->
+    <div class="rb-container">
+
+        <!-- LEFT: Form Panel -->
+        <div class="rb-form-panel">
+
+            <!-- Dismissible Suggestions Panel -->
+            <div id="rb-full-suggestions-panel" class="rb-card" style="display:none; border-color: rgba(0, 210, 255, 0.4); background: rgba(15, 23, 42, 0.95); margin-bottom: 20px;">
+                <div class="rb-card-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 8px;">
+                    <span class="rb-card-title" style="color: #00d2ff; font-weight: bold; font-size: 13px;">💡 AI Resume Review & Suggestions</span>
+                    <button type="button" class="rb-btn rb-btn-danger" style="padding: 2px 8px; font-size: 11px;" onclick="document.getElementById('rb-full-suggestions-panel').style.display='none'">✕ Dismiss</button>
+                </div>
+                <ul id="rb-full-suggestions-list" style="margin: 10px 0 0 16px; padding: 0; color: #cbd5e1; font-size: 13px; line-height: 1.6;"></ul>
+            </div>
+
+            <!-- Step Tabs -->
+            <div class="rb-steps">
+                <button type="button" class="rb-step-btn active" data-step="0">👤 Personal</button>
+                <button type="button" class="rb-step-btn" data-step="1">🎓 Education</button>
+                <button type="button" class="rb-step-btn" data-step="2">💼 Experience</button>
+                <button type="button" class="rb-step-btn" data-step="3">🏢 Internships</button>
+                <button type="button" class="rb-step-btn" data-step="4">🚀 Projects</button>
+                <button type="button" class="rb-step-btn" data-step="5">⚡ Skills</button>
+                <button type="button" class="rb-step-btn" data-step="6">📜 Certifications</button>
+                <button type="button" class="rb-step-btn" data-step="7">🏆 Achievements</button>
+                <button type="button" class="rb-step-btn" data-step="8">📚 Courses</button>
+            </div>
+
+            <!-- ===== STEP 0: Personal Info ===== -->
+            <div class="rb-section active" id="step-personal">
+                <div class="rb-section-header">
+                    <h2 class="rb-section-title">Personal Information</h2>
+                    <p class="rb-section-subtitle">Your basic contact details and profile links</p>
+                </div>
+                <div class="rb-card">
+                    <div class="rb-form-row">
+                        <div class="rb-form-group">
+                            <label class="rb-label">Full Name</label>
+                            <input type="text" class="rb-input" data-field="name" placeholder="John Doe" oninput="triggerPreviewUpdate()">
+                        </div>
+                        <div class="rb-form-group">
+                            <label class="rb-label">Email</label>
+                            <input type="email" class="rb-input" data-field="email" placeholder="john@example.com" oninput="triggerPreviewUpdate()">
+                        </div>
+                    </div>
+                    <div class="rb-form-group">
+                        <label class="rb-label">Phone</label>
+                        <input type="text" class="rb-input" data-field="phone" placeholder="+91 98765 43210" oninput="triggerPreviewUpdate()">
+                    </div>
+                    <div class="rb-form-row">
+                        <div class="rb-form-group">
+                            <label class="rb-label">LinkedIn URL</label>
+                            <input type="text" class="rb-input" data-field="linkedin" placeholder="https://linkedin.com/in/johndoe" oninput="triggerPreviewUpdate()">
+                        </div>
+                        <div class="rb-form-group">
+                            <label class="rb-label">GitHub URL</label>
+                            <input type="text" class="rb-input" data-field="github" placeholder="https://github.com/johndoe" oninput="triggerPreviewUpdate()">
+                        </div>
+                    </div>
+                    <div class="rb-form-group">
+                        <label class="rb-label">Portfolio / Website</label>
+                        <input type="text" class="rb-input" data-field="portfolio" placeholder="https://johndoe.dev" oninput="triggerPreviewUpdate()">
+                    </div>
+                </div>
+                <div class="rb-card" style="margin-top:2px;">
+                    <div class="rb-form-group">
+                        <label class="rb-label">Professional Summary</label>
+                        <div style="display:flex;gap:8px;align-items:start;">
+                            <textarea class="rb-textarea" id="summary-field" data-field="summary" placeholder="A brief 2-3 sentence professional summary highlighting your key strengths, experience, and career goals..." oninput="triggerPreviewUpdate()"></textarea>
+                            <button type="button" class="rb-btn rb-btn-ai" onclick="aiGenerateSummary()">✨ Generate</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="rb-nav-buttons">
+                    <div></div>
+                    <button type="button" class="rb-btn rb-btn-primary" onclick="nextStep()">Next →</button>
+                </div>
+            </div>
+
+            <!-- ===== STEP 1: Education ===== -->
+            <div class="rb-section" id="step-education">
+                <div class="rb-section-header">
+                    <h2 class="rb-section-title">Education</h2>
+                    <p class="rb-section-subtitle">Your academic qualifications</p>
+                </div>
+                <div data-entries="education">
+                    <!-- Default first entry -->
+                    <div class="rb-dynamic-entry">
+                        <div class="rb-entry-number">Education #1</div>
+                        <button type="button" class="rb-btn rb-btn-danger rb-entry-remove">✕</button>
+                        <div class="rb-form-row">
+                            <div class="rb-form-group">
+                                <label class="rb-label">Degree</label>
+                                <input type="text" class="rb-input" data-field="degree" placeholder="B.Tech in Computer Science" oninput="triggerPreviewUpdate()">
+                            </div>
+                            <div class="rb-form-group">
+                                <label class="rb-label">University</label>
+                                <input type="text" class="rb-input" data-field="university" placeholder="MIT, Stanford..." oninput="triggerPreviewUpdate()">
+                            </div>
+                        </div>
+                        <div class="rb-form-row-3">
+                            <div class="rb-form-group">
+                                <label class="rb-label">CGPA</label>
+                                <input type="text" class="rb-input" data-field="cgpa" placeholder="9.2" oninput="triggerPreviewUpdate()">
+                            </div>
+                            <div class="rb-form-group">
+                                <label class="rb-label">Start Year</label>
+                                <input type="text" class="rb-input" data-field="year_start" placeholder="2020" oninput="triggerPreviewUpdate()">
+                            </div>
+                            <div class="rb-form-group">
+                                <label class="rb-label">End Year</label>
+                                <input type="text" class="rb-input" data-field="year_end" placeholder="2024" oninput="triggerPreviewUpdate()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="rb-btn rb-btn-add" data-add-entry="education">+ Add Education</button>
+                <div class="rb-nav-buttons">
+                    <button type="button" class="rb-btn rb-btn-secondary" onclick="prevStep()">← Back</button>
+                    <button type="button" class="rb-btn rb-btn-primary" onclick="nextStep()">Next →</button>
+                </div>
+            </div>
+
+            <!-- ===== STEP 2: Experience ===== -->
+            <div class="rb-section" id="step-experience">
+                <div class="rb-section-header">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div>
+                            <h2 class="rb-section-title">Work Experience</h2>
+                            <p class="rb-section-subtitle">Your professional work history</p>
+                        </div>
+                        <button type="button" class="rb-btn rb-btn-ai" onclick="aiSuggest('experience', this)">💡 AI Suggestions</button>
+                    </div>
+                </div>
+                <div data-entries="experience">
+                    <div class="rb-dynamic-entry">
+                        <div class="rb-entry-number">Experience #1</div>
+                        <button type="button" class="rb-btn rb-btn-danger rb-entry-remove">✕</button>
+                        <div class="rb-form-row">
+                            <div class="rb-form-group">
+                                <label class="rb-label">Job Title</label>
+                                <input type="text" class="rb-input" data-field="title" placeholder="Software Engineer" oninput="triggerPreviewUpdate()">
+                            </div>
+                            <div class="rb-form-group">
+                                <label class="rb-label">Company</label>
+                                <input type="text" class="rb-input" data-field="company" placeholder="Google, Amazon..." oninput="triggerPreviewUpdate()">
+                            </div>
+                        </div>
+                        <div class="rb-form-group">
+                            <label class="rb-label">Duration</label>
+                            <input type="text" class="rb-input" data-field="duration" placeholder="Jan 2023 - Present" oninput="triggerPreviewUpdate()">
+                        </div>
+                        <div class="rb-form-group">
+                            <label class="rb-label">Description</label>
+                            <div style="display:flex;gap:8px;align-items:start;">
+                                <textarea class="rb-textarea" data-field="description" placeholder="Describe your role and achievements..." oninput="triggerPreviewUpdate()"></textarea>
+                                <button type="button" class="rb-btn rb-btn-ai" onclick="aiGenerate(this, 'experience')">✨ Generate</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="rb-btn rb-btn-add" data-add-entry="experience">+ Add Experience</button>
+                <div class="rb-nav-buttons">
+                    <button type="button" class="rb-btn rb-btn-secondary" onclick="prevStep()">← Back</button>
+                    <button type="button" class="rb-btn rb-btn-primary" onclick="nextStep()">Next →</button>
+                </div>
+            </div>
+
+            <!-- ===== STEP 3: Internships ===== -->
+            <div class="rb-section" id="step-internships">
+                <div class="rb-section-header">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div>
+                            <h2 class="rb-section-title">Internships</h2>
+                            <p class="rb-section-subtitle">Your internship experiences</p>
+                        </div>
+                        <button type="button" class="rb-btn rb-btn-ai" onclick="aiSuggest('internships', this)">💡 AI Suggestions</button>
+                    </div>
+                </div>
+                <div data-entries="internships">
+                    <div class="rb-dynamic-entry">
+                        <div class="rb-entry-number">Internship #1</div>
+                        <button type="button" class="rb-btn rb-btn-danger rb-entry-remove">✕</button>
+                        <div class="rb-form-row">
+                            <div class="rb-form-group">
+                                <label class="rb-label">Title</label>
+                                <input type="text" class="rb-input" data-field="title" placeholder="ML Intern" oninput="triggerPreviewUpdate()">
+                            </div>
+                            <div class="rb-form-group">
+                                <label class="rb-label">Company</label>
+                                <input type="text" class="rb-input" data-field="company" placeholder="Company name" oninput="triggerPreviewUpdate()">
+                            </div>
+                        </div>
+                        <div class="rb-form-group">
+                            <label class="rb-label">Duration</label>
+                            <input type="text" class="rb-input" data-field="duration" placeholder="May 2023 - Aug 2023" oninput="triggerPreviewUpdate()">
+                        </div>
+                        <div class="rb-form-group">
+                            <label class="rb-label">Description</label>
+                            <div style="display:flex;gap:8px;align-items:start;">
+                                <textarea class="rb-textarea" data-field="description" placeholder="Describe your internship responsibilities..." oninput="triggerPreviewUpdate()"></textarea>
+                                <button type="button" class="rb-btn rb-btn-ai" onclick="aiGenerate(this, 'internship')">✨ Generate</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="rb-btn rb-btn-add" data-add-entry="internships">+ Add Internship</button>
+                <div class="rb-nav-buttons">
+                    <button type="button" class="rb-btn rb-btn-secondary" onclick="prevStep()">← Back</button>
+                    <button type="button" class="rb-btn rb-btn-primary" onclick="nextStep()">Next →</button>
+                </div>
+            </div>
+
+            <!-- ===== STEP 4: Projects ===== -->
+            <div class="rb-section" id="step-projects">
+                <div class="rb-section-header">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div>
+                            <h2 class="rb-section-title">Projects</h2>
+                            <p class="rb-section-subtitle">Showcase your best work</p>
+                        </div>
+                        <button type="button" class="rb-btn rb-btn-ai" onclick="aiSuggest('projects', this)">💡 AI Suggestions</button>
+                    </div>
+                </div>
+                <div data-entries="projects">
+                    <div class="rb-dynamic-entry">
+                        <div class="rb-entry-number">Project #1</div>
+                        <button type="button" class="rb-btn rb-btn-danger rb-entry-remove">✕</button>
+                        <div class="rb-form-row">
+                            <div class="rb-form-group">
+                                <label class="rb-label">Project Name</label>
+                                <input type="text" class="rb-input" data-field="name" placeholder="CareerMate AI" oninput="triggerPreviewUpdate()">
+                            </div>
+                            <div class="rb-form-group">
+                                <label class="rb-label">Tech Stack</label>
+                                <input type="text" class="rb-input" data-field="tech_stack" placeholder="Python, Flask, Gemini API" oninput="triggerPreviewUpdate()">
+                            </div>
+                        </div>
+                        <div class="rb-form-group">
+                            <label class="rb-label">Project Link</label>
+                            <input type="text" class="rb-input" data-field="link" placeholder="https://github.com/..." oninput="triggerPreviewUpdate()">
+                        </div>
+                        <div class="rb-form-group">
+                            <label class="rb-label">Description</label>
+                            <div style="display:flex;gap:8px;align-items:start;">
+                                <textarea class="rb-textarea" data-field="description" placeholder="Brief description of the project..." oninput="triggerPreviewUpdate()"></textarea>
+                                <button type="button" class="rb-btn rb-btn-ai" onclick="aiGenerate(this, 'project')">✨ Generate</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="rb-btn rb-btn-add" data-add-entry="projects">+ Add Project</button>
+                <div class="rb-nav-buttons">
+                    <button type="button" class="rb-btn rb-btn-secondary" onclick="prevStep()">← Back</button>
+                    <button type="button" class="rb-btn rb-btn-primary" onclick="nextStep()">Next →</button>
+                </div>
+            </div>
+
+            <!-- ===== STEP 5: Skills ===== -->
+            <div class="rb-section" id="step-skills">
+                <div class="rb-section-header">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div>
+                            <h2 class="rb-section-title">Skills</h2>
+                            <p class="rb-section-subtitle">Type a skill and press Enter to add</p>
+                        </div>
+                        <button type="button" class="rb-btn rb-btn-ai" onclick="aiSuggest('skills', this)">💡 AI Suggestions</button>
+                    </div>
+                </div>
+                <div class="rb-card">
+                    <div class="rb-form-group">
+                        <label class="rb-label">Technical Skills</label>
+                        <div class="rb-tag-input-container" data-skill-category="technical">
+                            <input type="text" class="rb-tag-input" placeholder="e.g. Python, React, SQL...">
+                        </div>
+                    </div>
+                    <div class="rb-form-group">
+                        <label class="rb-label">Tools & Platforms</label>
+                        <div class="rb-tag-input-container" data-skill-category="tools">
+                            <input type="text" class="rb-tag-input" placeholder="e.g. Git, Docker, AWS...">
+                        </div>
+                    </div>
+                    <div class="rb-form-group">
+                        <label class="rb-label">Soft Skills</label>
+                        <div class="rb-tag-input-container" data-skill-category="soft">
+                            <input type="text" class="rb-tag-input" placeholder="e.g. Leadership, Communication...">
+                        </div>
+                    </div>
+                </div>
+                <div class="rb-nav-buttons">
+                    <button type="button" class="rb-btn rb-btn-secondary" onclick="prevStep()">← Back</button>
+                    <button type="button" class="rb-btn rb-btn-primary" onclick="nextStep()">Next →</button>
+                </div>
+            </div>
+
+            <!-- ===== STEP 6: Certifications ===== -->
+            <div class="rb-section" id="step-certifications">
+                <div class="rb-section-header">
+                    <h2 class="rb-section-title">Certifications</h2>
+                    <p class="rb-section-subtitle">Professional certifications and licenses</p>
+                </div>
+                <div data-entries="certifications">
+                    <div class="rb-dynamic-entry">
+                        <div class="rb-entry-number">Certification #1</div>
+                        <button type="button" class="rb-btn rb-btn-danger rb-entry-remove">✕</button>
+                        <div class="rb-form-row-3">
+                            <div class="rb-form-group">
+                                <label class="rb-label">Name</label>
+                                <input type="text" class="rb-input" data-field="name" placeholder="AWS Solutions Architect" oninput="triggerPreviewUpdate()">
+                            </div>
+                            <div class="rb-form-group">
+                                <label class="rb-label">Issuer</label>
+                                <input type="text" class="rb-input" data-field="issuer" placeholder="Amazon Web Services" oninput="triggerPreviewUpdate()">
+                            </div>
+                            <div class="rb-form-group">
+                                <label class="rb-label">Year</label>
+                                <input type="text" class="rb-input" data-field="year" placeholder="2024" oninput="triggerPreviewUpdate()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="rb-btn rb-btn-add" data-add-entry="certifications">+ Add Certification</button>
+                <div class="rb-nav-buttons">
+                    <button type="button" class="rb-btn rb-btn-secondary" onclick="prevStep()">← Back</button>
+                    <button type="button" class="rb-btn rb-btn-primary" onclick="nextStep()">Next →</button>
+                </div>
+            </div>
+
+            <!-- ===== STEP 7: Achievements ===== -->
+            <div class="rb-section" id="step-achievements">
+                <div class="rb-section-header">
+                    <h2 class="rb-section-title">Achievements</h2>
+                    <p class="rb-section-subtitle">Awards, honors, and notable accomplishments</p>
+                </div>
+                <div data-entries="achievements">
+                    <div class="rb-dynamic-entry">
+                        <div class="rb-entry-number">Achievement #1</div>
+                        <button type="button" class="rb-btn rb-btn-danger rb-entry-remove">✕</button>
+                        <div class="rb-form-group">
+                            <input type="text" class="rb-input" data-field="text" placeholder="Won 1st place at XYZ Hackathon 2024" oninput="triggerPreviewUpdate()">
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="rb-btn rb-btn-add" data-add-entry="achievements">+ Add Achievement</button>
+                <div class="rb-nav-buttons">
+                    <button type="button" class="rb-btn rb-btn-secondary" onclick="prevStep()">← Back</button>
+                    <button type="button" class="rb-btn rb-btn-primary" onclick="nextStep()">Next →</button>
+                </div>
+            </div>
+
+            <!-- ===== STEP 8: Courses ===== -->
+            <div class="rb-section" id="step-courses">
+                <div class="rb-section-header">
+                    <h2 class="rb-section-title">Courses</h2>
+                    <p class="rb-section-subtitle">Relevant online or offline courses completed</p>
+                </div>
+                <div data-entries="courses">
+                    <div class="rb-dynamic-entry">
+                        <div class="rb-entry-number">Course #1</div>
+                        <button type="button" class="rb-btn rb-btn-danger rb-entry-remove">✕</button>
+                        <div class="rb-form-group">
+                            <input type="text" class="rb-input" data-field="text" placeholder="Machine Learning by Andrew Ng (Coursera)" oninput="triggerPreviewUpdate()">
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="rb-btn rb-btn-add" data-add-entry="courses">+ Add Course</button>
+                <div class="rb-nav-buttons">
+                    <button type="button" class="rb-btn rb-btn-secondary" onclick="prevStep()">← Back</button>
+                    <div></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT: Preview Panel -->
+        <div class="rb-preview-panel">
+            <div class="rb-preview-toolbar">
+                <div class="rb-template-switcher">
+                    <button type="button" class="rb-template-btn active" data-template="classic">Classic</button>
+                    <button type="button" class="rb-template-btn" data-template="modern">Modern</button>
+                    <button type="button" class="rb-template-btn" data-template="minimal">Minimal</button>
+                </div>
+                <button type="button" id="download-pdf-btn-2" class="rb-btn rb-btn-download" onclick="document.getElementById('download-pdf-btn').click()">⬇ PDF</button>
+            </div>
+            <div class="rb-preview-frame">
+                <div class="rb-preview-empty" id="preview-empty">
+                    <div class="icon">📄</div>
+                    <p>Start filling in your details to see a live preview</p>
+                </div>
+                <div class="rb-preview-content" id="preview-content" style="display:none;">
+                    <iframe id="resume-preview-iframe" title="Live Resume Preview" srcdoc="" style="width:100%;height:100%;border:none;min-height:1050px;background:#ffffff;display:block;"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- AI Suggestion Toast -->
+    <div class="rb-toast" id="ai-toast">
+        <div class="rb-toast-header">
+            <span class="rb-toast-title">💡 AI Suggestions</span>
+            <span class="rb-toast-close" onclick="closeToast()">✕</span>
+        </div>
+        <div class="rb-toast-body"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/resume_builder.js') }}"></script>
+</body>
+</html>

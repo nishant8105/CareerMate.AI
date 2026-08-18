@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Interview Preparation — CareerMate AI</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #0a0a0f;
+      color: #e8e8f0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 20% 25%, rgba(0, 210, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 75%, rgba(123, 47, 247, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .logo-link img {
+      height: 36px;
+    }
+    .hero-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(0,210,255,0.2), rgba(123,47,247,0.2));
+      border: 1px solid rgba(0, 210, 255, 0.4);
+      color: #00d2ff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .hero-section h1 {
+      font-size: 30px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .hero-section p {
+      color: #94a3b8;
+      font-size: 15px;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    .flash-messages {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .flash-msg {
+      background: rgba(255, 77, 106, 0.2);
+      border: 1px solid rgba(255, 77, 106, 0.4);
+      color: #ff99aa;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .config-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 26px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+      margin-bottom: 30px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1.5fr auto;
+      gap: 16px;
+      align-items: flex-end;
+    }
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #00d2ff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .select-input {
+      width: 100%;
+      background: rgba(10, 15, 29, 0.9);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+    .select-input:focus {
+      border-color: #00d2ff;
+    }
+    .resume-upload-box {
+      border: 1px dashed rgba(0, 210, 255, 0.35);
+      background: rgba(0, 210, 255, 0.03);
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+    .session-check {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 6px;
+    }
+    .session-check input {
+      accent-color: #00d2ff;
+    }
+    .btn-generate {
+      background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+      color: #fff;
+      border: none;
+      padding: 13px 26px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 210, 255, 0.3);
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 210, 255, 0.45);
+    }
+
+    /* Tab Navigation */
+    .tabs-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .tabs-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+      padding: 9px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-btn.active {
+      background: rgba(0, 210, 255, 0.15);
+      border-color: rgba(0, 210, 255, 0.4);
+      color: #00d2ff;
+    }
+    .tab-badge {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+    .tab-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-action-sm {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e8e8f0;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-action-sm:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(0, 210, 255, 0.4);
+    }
+
+    /* Tab Content Cards */
+    .tab-pane {
+      display: none;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+
+    .q-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(15px);
+      transition: all 0.2s ease;
+    }
+    .q-card:hover {
+      border-color: rgba(0, 210, 255, 0.35);
+    }
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+    .q-num {
+      background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+      color: #000;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .q-text {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.5;
+      flex: 1;
+    }
+    .q-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .q-tip {
+      font-size: 12px;
+      color: #64748b;
+    }
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    /* Toast Alert */
+    .toast {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid #00e68a;
+      color: #00e68a;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 9999;
+      animation: toastIn 0.3s ease;
+    }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header-bar">
+      <a href="/" class="logo-link">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo">
+        <span>CareerMate<span style="color: #00d2ff;">.AI</span></span>
+      </a>
+      <div style="display: flex; gap: 10px;">
+        <a href="/predict" style="color: #cbd5e1; font-size: 14px; text-decoration: none; padding: 8px 14px;">Resume Predictor</a>
+        <a href="/resume/builder" style="color: #00d2ff; font-size: 14px; text-decoration: none; padding: 8px 14px;">Resume Builder →</a>
+      </div>
+    </div>
+
+    <div class="hero-section">
+      <span class="badge">🎯 AI Interview Preparation</span>
+      <h1>Personalized Interview Questions</h1>
+      <p>Generate role-specific technical questions, HR & behavioral scenarios, and custom questions tailored to your actual resume projects and experience.</p>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for msg in messages %}
+            <div class="flash-msg">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Role Configuration Form -->
+    <div class="config-card">
+      <form action="/interview-prep/generate" method="post" enctype="multipart/form-data">
+        <div class="form-grid">
+          
+          <div class="form-group">
+            <label>1. Target Career Role</label>
+            <select name="role" id="role-select" class="select-input">
+              <option value="Python Developer" {% if selected_role == 'Python Developer' %}selected{% endif %}>🐍 Python Developer</option>
+              <option value="Data Scientist" {% if selected_role == 'Data Scientist' %}selected{% endif %}>📊 Data Scientist</option>
+              <option value="ML Engineer" {% if selected_role == 'ML Engineer' %}selected{% endif %}>🤖 Machine Learning Engineer</option>
+              <option value="Web Developer" {% if selected_role == 'Web Developer' %}selected{% endif %}>🌐 Web Developer (Fullstack)</option>
+              <option value="Data Analyst" {% if selected_role == 'Data Analyst' %}selected{% endif %}>📈 Data Analyst</option>
+              <option value="Software Developer" {% if selected_role == 'Software Developer' %}selected{% endif %}>💻 Software Developer (General)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>2. Optional Resume (For Tailored Questions)</label>
+            <div class="resume-upload-box" onclick="document.getElementById('prep-resume-input').click()">
+              <span>📁</span>
+              <span id="prep-file-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Upload Resume (.pdf)</span>
+              <input type="file" name="resume_file" id="prep-resume-input" accept=".pdf" style="display: none;" onchange="updatePrepFileName(this)">
+            </div>
+            {% if has_last_resume %}
+            <label class="session-check">
+              <input type="checkbox" name="use_last_resume" value="yes">
+              <span>Use previously uploaded resume</span>
+            </label>
+            {% endif %}
+          </div>
+
+          <div>
+            <button type="submit" class="btn-generate">⚡ Generate Questions</button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+    <!-- Generated Results Section -->
+    {% if technical_questions or hr_questions or resume_questions %}
+    <div>
+      
+      <!-- Tab Bar & Controls -->
+      <div class="tabs-bar">
+        <div class="tabs-nav">
+          <button class="tab-btn active" id="btn-tech-tab" onclick="switchTab('tech-tab', this)">
+            <span>💻 Technical Questions</span>
+            <span class="tab-badge" id="badge-tech">{{ technical_questions|length }}</span>
+          </button>
+          
+          <button class="tab-btn" id="btn-hr-tab" onclick="switchTab('hr-tab', this)">
+            <span>🤝 HR & Behavioral</span>
+            <span class="tab-badge" id="badge-hr">{{ hr_questions|length }}</span>
+          </button>
+
+          {% if resume_questions %}
+          <button class="tab-btn" id="btn-resume-tab" onclick="switchTab('resume-tab', this)">
+            <span>👤 Based on Your Resume</span>
+            <span class="tab-badge" id="badge-resume">{{ resume_questions|length }}</span>
+          </button>
+          {% endif %}
+        </div>
+
+        <div class="tab-actions">
+          <button type="button" class="btn-action-sm" onclick="regenerateActiveSection()">
+            <span id="regen-icon">🔄</span> Regenerate Section
+          </button>
+          <button type="button" class="btn-action-sm" style="border-color: rgba(0, 210, 255, 0.4); color: #00d2ff;" onclick="saveQuestionSet()">
+            💾 Save Question Set
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 1: Technical Questions -->
+      <div id="tech-tab" class="tab-pane active" data-section="tech">
+        <div class="questions-list" id="list-tech">
+          {% for q in technical_questions %}
+          <div class="q-card">
+            <div class="q-header">
+              <span class="q-num">Q{{ loop.index }}</span>
+              <span class="q-text">{{ q }}</span>
+            </div>
+            <div class="q-footer">
+              <span class="q-tip">Tip: Address architecture, performance trade-offs, and failure recovery.</span>
+              <button type="button" class="btn-copy" onclick="copyText('{{ q|escape }}')">📋 Copy</button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Tab 2: HR & Behavioral Questions -->
+      <div id="hr-tab" class="tab-pane" data-section="hr">
+        <div class="questions-list" id="list-hr">
+          {% for q in hr_questions %}
+          <div class="q-card">
+            <div class="q-header">
+              <span class="q-num">HR{{ loop.index }}</span>
+              <span class="q-text">{{ q }}</span>
+            </div>
+            <div class="q-footer">
+              <span class="q-tip">Tip: Structure response using STAR (Situation, Task, Action, Result).</span>
+              <button type="button" class="btn-copy" onclick="copyText('{{ q|escape }}')">📋 Copy</button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Tab 3: Resume-Based Questions -->
+      {% if resume_questions %}
+      <div id="resume-tab" class="tab-pane" data-section="resume">
+        <div class="questions-list" id="list-resume">
+          {% for q in resume_questions %}
+          <div class="q-card">
+            <div class="q-header">
+              <span class="q-num">CV{{ loop.index }}</span>
+              <span class="q-text">{{ q }}</span>
+            </div>
+            <div class="q-footer">
+              <span class="q-tip">Tip: Highlight your specific contributions, metrics, and tech stack choices.</span>
+              <button type="button" class="btn-copy" onclick="copyText('{{ q|escape }}')">📋 Copy</button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div style="text-align: center; margin-top: 30px; display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+        <button type="button" class="btn-generate" onclick="copyAllActive()">📋 Copy All Questions in Active Tab</button>
+        <a href="/predict" class="btn-action-sm" style="padding: 12px 20px; font-size: 13px;">📄 Test with Resume Predictor</a>
+        <a href="/job-match" class="btn-action-sm" style="padding: 12px 20px; font-size: 13px;">🎯 Check Job Match</a>
+      </div>
+
+    </div>
+    {% endif %}
+
+  </div>
+
+  <div id="toast-msg" class="toast">✓ Question set saved to session!</div>
+
+  <script>
+    function updatePrepFileName(input) {
+      const label = document.getElementById('prep-file-label');
+      if (input.files && input.files[0]) {
+        label.textContent = input.files[0].name;
+        label.style.color = '#00e68a';
+      }
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Question copied to clipboard!');
+      });
+    }
+
+    function copyAllActive() {
+      const activePane = document.querySelector('.tab-pane.active');
+      if (activePane) {
+        const questions = activePane.querySelectorAll('.q-text');
+        const list = Array.from(questions).map((q, i) => `${i+1}. ${q.textContent.trim()}`).join('\n\n');
+        navigator.clipboard.writeText(list).then(() => {
+          showToast('Copied all questions from active tab!');
+        });
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast-msg');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    async function regenerateActiveSection() {
+      const activePane = document.querySelector('.tab-pane.active');
+      if (!activePane) return;
+
+      const section = activePane.getAttribute('data-section');
+      const role = document.getElementById('role-select').value;
+      const regenIcon = document.getElementById('regen-icon');
+      
+      regenIcon.style.display = 'inline-block';
+      regenIcon.style.animation = 'spin 1s infinite linear';
+
+      try {
+        const res = await fetch('/interview-prep/ajax/regenerate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ section: section, role: role })
+        });
+        const data = await res.json();
+        
+        if (data.status === 'success' && data.questions) {
+          const listContainer = document.getElementById('list-' + section);
+          listContainer.innerHTML = '';
+          
+          data.questions.forEach((q, idx) => {
+            const prefix = section === 'tech' ? 'Q' : (section === 'hr' ? 'HR' : 'CV');
+            const card = document.createElement('div');
+            card.className = 'q-card';
+            card.innerHTML = `
+              <div class="q-header">
+                <span class="q-num">${prefix}${idx+1}</span>
+                <span class="q-text">${escapeHtml(q)}</span>
+              </div>
+              <div class="q-footer">
+                <span class="q-tip">Tip: Focus on structure, trade-offs, and measurable outcomes.</span>
+                <button type="button" class="btn-copy" onclick="copyText('${escapeAttr(q)}')">📋 Copy</button>
+              </div>
+            `;
+            listContainer.appendChild(card);
+          });
+
+          const badge = document.getElementById('badge-' + section);
+          if (badge) badge.textContent = data.questions.length;
+          showToast(`Regenerated ${section.toUpperCase()} questions!`);
+        }
+      } catch (err) {
+        showToast('Error regenerating section.');
+      } finally {
+        regenIcon.style.animation = 'none';
+      }
+    }
+
+    async function saveQuestionSet() {
+      const role = document.getElementById('role-select').value;
+      const getQuestions = (id) => {
+        const container = document.getElementById(id);
+        if (!container) return [];
+        return Array.from(container.querySelectorAll('.q-text')).map(el => el.textContent.trim());
+      };
+
+      const payload = {
+        role: role,
+        tech_questions: getQuestions('list-tech'),
+        hr_questions: getQuestions('list-hr'),
+        resume_questions: getQuestions('list-resume')
+      };
+
+      try {
+        const res = await fetch('/interview-prep/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          showToast('✓ Question set saved to session!');
+        }
+      } catch (e) {
+        showToast('Could not save question set.');
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function escapeAttr(text) {
+      return text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>

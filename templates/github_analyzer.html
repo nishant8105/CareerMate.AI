@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Profile Analyzer — CareerMate AI</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #0a0a0f;
+      color: #e8e8f0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 15% 25%, rgba(0, 210, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 75%, rgba(123, 47, 247, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .logo-link img {
+      height: 36px;
+    }
+    .hero-section {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(0,210,255,0.2), rgba(123,47,247,0.2));
+      border: 1px solid rgba(0, 210, 255, 0.4);
+      color: #00d2ff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .hero-section h1 {
+      font-size: 32px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .hero-section p {
+      color: #94a3b8;
+      font-size: 15px;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .flash-messages {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .flash-msg {
+      background: rgba(255, 77, 106, 0.2);
+      border: 1px solid rgba(255, 77, 106, 0.4);
+      color: #ff99aa;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .input-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+      margin-bottom: 30px;
+    }
+    .input-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 600px) {
+      .input-group {
+        flex-direction: column;
+      }
+    }
+    .username-input {
+      flex: 1;
+      background: rgba(10, 15, 29, 0.9);
+      border: 1px solid rgba(0, 210, 255, 0.35);
+      color: #fff;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .username-input:focus {
+      border-color: #00d2ff;
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+    }
+    .btn-analyze {
+      background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-analyze:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(0, 210, 255, 0.45);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .feature-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .feat-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .feat-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .feat-desc {
+      font-size: 12.5px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header-bar">
+      <a href="/" class="logo-link">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo">
+        <span>CareerMate<span style="color: #00d2ff;">.AI</span></span>
+      </a>
+      <a href="/projects" style="color: #00d2ff; font-size: 14px; text-decoration: none;">Explore Project Catalog →</a>
+    </div>
+
+    <div class="hero-section">
+      <span class="badge">🐙 GitHub Portfolio Intelligence</span>
+      <h1>GitHub Profile Analyzer</h1>
+      <p>Audit your public GitHub repositories, evaluate documentation quality and activity recency, and get recruiter-grade portfolio recommendations.</p>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for msg in messages %}
+            <div class="flash-msg">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="input-card">
+      <form action="/github-analyzer/analyze" method="post">
+        <div style="margin-bottom: 14px;">
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #00d2ff; text-transform: uppercase; margin-bottom: 6px;">Target Career Role</label>
+          <select name="target_role" style="width: 100%; background: rgba(10, 15, 29, 0.9); border: 1px solid rgba(0, 210, 255, 0.35); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 13px; outline: none;">
+            {% for r in all_roles %}
+              <option value="{{ r }}" {% if r == default_role %}selected{% endif %}>{{ r }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="input-group">
+          <input
+            type="text"
+            name="username"
+            class="username-input"
+            placeholder="Enter GitHub username (e.g. torvalds, tiangolo, psf)..."
+            required
+            autocomplete="off"
+            autofocus
+          >
+          <button type="submit" class="btn-analyze">⚡ Analyze Profile</button>
+        </div>
+      </form>
+      <span style="font-size: 12px; color: #64748b; display: block; text-align: center;">
+        Analyzes public repositories, commit recency, README documentation, and language distribution.
+      </span>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-box">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-title">Activity & Recency</div>
+        <div class="feat-desc">Evaluates commit timelines to ensure your public repositories demonstrate active development.</div>
+      </div>
+
+      <div class="feature-box">
+        <div class="feat-icon">📚</div>
+        <div class="feat-title">Documentation Health</div>
+        <div class="feat-desc">Flags missing descriptions, incomplete READMEs, and undocumented codebases.</div>
+      </div>
+
+      <div class="feature-box">
+        <div class="feat-icon">🌐</div>
+        <div class="feat-title">Tech Diversity</div>
+        <div class="feat-desc">Analyzes programming language variety and framework specialization across your profile.</div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

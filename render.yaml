@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: CareerMate.AI
+    env: python
+    buildCommand: "pip install -r requirements.txt && python -m nltk.downloader punkt averaged_perceptron_tagger stopwords"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Description Matcher — CareerMate AI</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #0a0a0f;
+      color: #e8e8f0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 20% 25%, rgba(0, 210, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 75%, rgba(123, 47, 247, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .logo-link img {
+      height: 36px;
+    }
+    .hero-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(0,210,255,0.2), rgba(123,47,247,0.2));
+      border: 1px solid rgba(0, 210, 255, 0.4);
+      color: #00d2ff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .hero-section h1 {
+      font-size: 30px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .hero-section p {
+      color: #94a3b8;
+      font-size: 15px;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    .saved-results-banner {
+      background: rgba(0, 210, 255, 0.08);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      border-radius: 12px;
+      padding: 12px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .saved-results-banner span {
+      color: #cbd5e1;
+      font-size: 13px;
+    }
+    .flash-messages {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .flash-msg {
+      background: rgba(255, 77, 106, 0.2);
+      border: 1px solid rgba(255, 77, 106, 0.4);
+      color: #ff99aa;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .input-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 26px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+    }
+    .input-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #00d2ff;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dropzone {
+      border: 2px dashed rgba(0, 210, 255, 0.35);
+      background: rgba(0, 210, 255, 0.03);
+      border-radius: 14px;
+      padding: 30px 20px;
+      text-align: center;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .dropzone:hover {
+      border-color: #00d2ff;
+      background: rgba(0, 210, 255, 0.07);
+    }
+    .dropzone .icon {
+      font-size: 38px;
+      margin-bottom: 8px;
+    }
+    .session-toggle {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-top: auto;
+    }
+    .session-toggle input {
+      accent-color: #00d2ff;
+      width: 16px;
+      height: 16px;
+    }
+    .jd-textarea {
+      width: 100%;
+      height: 220px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      color: #fff;
+      padding: 14px;
+      font-family: inherit;
+      font-size: 13px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .jd-textarea:focus {
+      border-color: rgba(0, 210, 255, 0.5);
+      background: rgba(0, 210, 255, 0.02);
+    }
+    .submit-container {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .btn-submit {
+      background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+      color: #fff;
+      border: none;
+      padding: 14px 40px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 210, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 210, 255, 0.45);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header-bar">
+      <a href="/" class="logo-link">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo">
+        <span>CareerMate<span style="color: #00d2ff;">.AI</span></span>
+      </a>
+      <div style="display: flex; gap: 10px;">
+        <a href="/ats" style="color: #cbd5e1; font-size: 14px; text-decoration: none; padding: 8px 14px;">ATS Analyzer</a>
+        <a href="/resume/builder" style="color: #00d2ff; font-size: 14px; text-decoration: none; padding: 8px 14px;">Resume Builder →</a>
+      </div>
+    </div>
+
+    <div class="hero-section">
+      <span class="badge">🎯 Match Score & Skill Gap</span>
+      <h1>Job Description Matcher</h1>
+      <p>Compare your resume against any job description to evaluate your qualification match percentage, identify missing skills, and target high-frequency keywords.</p>
+    </div>
+
+    {% if has_last_match %}
+    <div class="saved-results-banner">
+      <span>💾 You have a recent match analysis saved in this session.</span>
+      <a href="/job-match/results" style="color: #00d2ff; font-size: 13px; font-weight: 600; text-decoration: none;">View Recent Results →</a>
+    </div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for msg in messages %}
+            <div class="flash-msg">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form action="/job-match/analyze" method="post" enctype="multipart/form-data">
+      <div class="form-grid">
+        
+        <!-- Input 1: Resume Upload / Session Selection -->
+        <div class="input-card">
+          <h2 class="input-card-title">📄 Step 1: Your Resume</h2>
+          
+          <div class="dropzone" id="dropzone" onclick="document.getElementById('pdf-input').click()">
+            <div class="icon">📁</div>
+            <p style="font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px;">Click or drag & drop Resume PDF</p>
+            <p id="file-name-display" style="font-size: 12px; color: #94a3b8;">Supported format: .pdf</p>
+          </div>
+          
+          <input type="file" name="resume_file" id="pdf-input" accept=".pdf" style="display: none;" onchange="updateFileName(this)">
+
+          {% if has_last_resume %}
+          <label class="session-toggle">
+            <input type="checkbox" name="use_last_resume" id="use-last-resume" value="yes" onchange="toggleResumeInput(this)">
+            <span>Use my previously uploaded resume</span>
+          </label>
+          {% endif %}
+        </div>
+
+        <!-- Input 2: Job Description Text -->
+        <div class="input-card">
+          <h2 class="input-card-title">💼 Step 2: Target Job Description</h2>
+          <textarea name="jd_text" class="jd-textarea" placeholder="Paste the job description, required qualifications, and responsibilities here..." required>{{ last_jd_text }}</textarea>
+        </div>
+
+      </div>
+
+      <div class="submit-container">
+        <button type="submit" class="btn-submit">⚡ Compute Job Match Score</button>
+      </div>
+    </form>
+
+  </div>
+
+  <script>
+    function updateFileName(input) {
+      const display = document.getElementById('file-name-display');
+      if (input.files && input.files[0]) {
+        display.textContent = 'Selected: ' + input.files[0].name;
+        display.style.color = '#00e68a';
+      }
+    }
+
+    function toggleResumeInput(checkbox) {
+      const dropzone = document.getElementById('dropzone');
+      if (checkbox.checked) {
+        dropzone.style.opacity = '0.5';
+        dropzone.style.pointerEvents = 'none';
+      } else {
+        dropzone.style.opacity = '1';
+        dropzone.style.pointerEvents = 'auto';
+      }
+    }
+
+    const dropzone = document.getElementById('dropzone');
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = '#00d2ff';
+    });
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.style.borderColor = 'rgba(0, 210, 255, 0.35)';
+    });
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = 'rgba(0, 210, 255, 0.35)';
+      if (e.dataTransfer.files.length) {
+        document.getElementById('pdf-input').files = e.dataTransfer.files;
+        updateFileName(document.getElementById('pdf-input'));
+      }
+    });
+  </script>
+</body>
+</html>

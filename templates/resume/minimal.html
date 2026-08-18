@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ data.personal.name }} - Resume</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0.7in 0.8in;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #333;
+            font-size: 9.5pt;
+            line-height: 1.5;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 26pt;
+            font-weight: 300;
+            color: #222;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .contact-line {
+            font-size: 8.5pt;
+            color: #777;
+            letter-spacing: 0.5px;
+        }
+        .contact-line a {
+            color: #555;
+            text-decoration: none;
+        }
+        .contact-line .sep {
+            margin: 0 8px;
+            color: #ccc;
+        }
+        .header-rule {
+            margin-top: 12px;
+            border: none;
+            border-top: 1px solid #ddd;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 14px;
+        }
+        .section-title {
+            font-size: 8.5pt;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        /* Entries */
+        .entry {
+            margin-bottom: 10px;
+        }
+        .entry-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .entry-title {
+            font-weight: 600;
+            font-size: 10pt;
+            color: #222;
+        }
+        .entry-subtitle {
+            font-weight: 400;
+            color: #666;
+            font-size: 9.5pt;
+        }
+        .entry-date {
+            font-size: 8.5pt;
+            color: #999;
+            white-space: nowrap;
+        }
+        .entry-description {
+            margin-top: 3px;
+            color: #555;
+            font-size: 9pt;
+        }
+        .entry-tech {
+            font-size: 8pt;
+            color: #888;
+            margin-top: 2px;
+            font-style: italic;
+        }
+        .entry-link a {
+            font-size: 8pt;
+            color: #666;
+            text-decoration: none;
+        }
+
+        /* Skills */
+        .skills-line {
+            margin-bottom: 4px;
+            font-size: 9pt;
+        }
+        .skills-label {
+            font-weight: 600;
+            color: #444;
+        }
+        .skills-items {
+            color: #666;
+        }
+
+        /* List */
+        .simple-list {
+            padding-left: 0;
+            list-style: none;
+        }
+        .simple-list li {
+            font-size: 9pt;
+            color: #555;
+            margin-bottom: 3px;
+            padding-left: 12px;
+            position: relative;
+        }
+        .simple-list li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: #ccc;
+        }
+
+        /* Certifications */
+        .cert-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+            font-size: 9pt;
+        }
+        .cert-name {
+            color: #333;
+        }
+        .cert-detail {
+            color: #999;
+            font-size: 8.5pt;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>{{ data.personal.name }}</h1>
+        <div class="contact-line">
+            {% if data.personal.email %}{{ data.personal.email }}{% endif %}
+            {% if data.personal.phone %}<span class="sep">·</span>{{ data.personal.phone }}{% endif %}
+            {% if data.personal.linkedin %}<span class="sep">·</span><a href="{{ data.personal.linkedin }}">LinkedIn</a>{% endif %}
+            {% if data.personal.github %}<span class="sep">·</span><a href="{{ data.personal.github }}">GitHub</a>{% endif %}
+            {% if data.personal.portfolio %}<span class="sep">·</span><a href="{{ data.personal.portfolio }}">Portfolio</a>{% endif %}
+        </div>
+        <hr class="header-rule">
+    </div>
+
+    <!-- Summary -->
+    {% if data.summary %}
+    <div class="section">
+        <div class="section-title">Summary</div>
+        <div class="entry-description">{{ data.summary }}</div>
+    </div>
+    {% endif %}
+
+    <!-- Education -->
+    {% if data.education and data.education|selectattr('degree')|list %}
+    <div class="section">
+        <div class="section-title">Education</div>
+        {% for edu in data.education %}
+        {% if edu.degree %}
+        <div class="entry">
+            <div class="entry-row">
+                <div>
+                    <span class="entry-title">{{ edu.degree }}</span>
+                    <span class="entry-subtitle"> · {{ edu.university }}</span>
+                </div>
+                <span class="entry-date">
+                    {% if edu.year_start %}{{ edu.year_start }}{% endif %}
+                    {% if edu.year_end %} – {{ edu.year_end }}{% endif %}
+                </span>
+            </div>
+            {% if edu.cgpa %}<div class="entry-description">CGPA: {{ edu.cgpa }}</div>{% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Experience -->
+    {% if data.experience and data.experience|selectattr('title')|list %}
+    <div class="section">
+        <div class="section-title">Experience</div>
+        {% for exp in data.experience %}
+        {% if exp.title %}
+        <div class="entry">
+            <div class="entry-row">
+                <div>
+                    <span class="entry-title">{{ exp.title }}</span>
+                    <span class="entry-subtitle"> · {{ exp.company }}</span>
+                </div>
+                <span class="entry-date">{{ exp.duration }}</span>
+            </div>
+            {% if exp.description %}
+            <div class="entry-description">{{ exp.description }}</div>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Internships -->
+    {% if data.internships and data.internships|selectattr('title')|list %}
+    <div class="section">
+        <div class="section-title">Internships</div>
+        {% for intern in data.internships %}
+        {% if intern.title %}
+        <div class="entry">
+            <div class="entry-row">
+                <div>
+                    <span class="entry-title">{{ intern.title }}</span>
+                    <span class="entry-subtitle"> · {{ intern.company }}</span>
+                </div>
+                <span class="entry-date">{{ intern.duration }}</span>
+            </div>
+            {% if intern.description %}
+            <div class="entry-description">{{ intern.description }}</div>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Projects -->
+    {% if data.projects and data.projects|selectattr('name')|list %}
+    <div class="section">
+        <div class="section-title">Projects</div>
+        {% for proj in data.projects %}
+        {% if proj.name %}
+        <div class="entry">
+            <span class="entry-title">{{ proj.name }}</span>
+            {% if proj.tech_stack %}<div class="entry-tech">{{ proj.tech_stack }}</div>{% endif %}
+            {% if proj.description %}<div class="entry-description">{{ proj.description }}</div>{% endif %}
+            {% if proj.link %}<div class="entry-link"><a href="{{ proj.link }}">{{ proj.link }}</a></div>{% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Skills -->
+    {% if data.skills and (data.skills.technical or data.skills.soft or data.skills.tools) %}
+    <div class="section">
+        <div class="section-title">Skills</div>
+        {% if data.skills.technical %}
+        <div class="skills-line">
+            <span class="skills-label">Technical: </span>
+            <span class="skills-items">{{ data.skills.technical | join(' · ') }}</span>
+        </div>
+        {% endif %}
+        {% if data.skills.tools %}
+        <div class="skills-line">
+            <span class="skills-label">Tools: </span>
+            <span class="skills-items">{{ data.skills.tools | join(' · ') }}</span>
+        </div>
+        {% endif %}
+        {% if data.skills.soft %}
+        <div class="skills-line">
+            <span class="skills-label">Soft Skills: </span>
+            <span class="skills-items">{{ data.skills.soft | join(' · ') }}</span>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Certifications -->
+    {% if data.certifications and data.certifications|selectattr('name')|list %}
+    <div class="section">
+        <div class="section-title">Certifications</div>
+        {% for cert in data.certifications %}
+        {% if cert.name %}
+        <div class="cert-row">
+            <span class="cert-name">{{ cert.name }}</span>
+            <span class="cert-detail">{{ cert.issuer }}{% if cert.year %} · {{ cert.year }}{% endif %}</span>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Achievements -->
+    {% if data.achievements and data.achievements|select|list %}
+    <div class="section">
+        <div class="section-title">Achievements</div>
+        <ul class="simple-list">
+            {% for ach in data.achievements %}
+            {% if ach %}<li>{{ ach }}</li>{% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Courses -->
+    {% if data.courses and data.courses|select|list %}
+    <div class="section">
+        <div class="section-title">Courses</div>
+        <ul class="simple-list">
+            {% for course in data.courses %}
+            {% if course %}<li>{{ course }}</li>{% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+</body>
+</html>

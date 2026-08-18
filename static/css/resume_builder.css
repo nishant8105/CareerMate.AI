@@ -1,0 +1,782 @@
+/* ==========================================
+   CareerMate AI — Resume Builder Styles
+   Premium dark theme with glassmorphism
+   ========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ---------- CSS Variables ---------- */
+:root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-card: rgba(20, 20, 35, 0.7);
+    --bg-glass: rgba(255, 255, 255, 0.03);
+    --bg-input: rgba(255, 255, 255, 0.05);
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --border-active: rgba(0, 210, 255, 0.4);
+    --text-primary: #e8e8f0;
+    --text-secondary: #8888a0;
+    --text-muted: #55556a;
+    --accent: #00d2ff;
+    --accent-glow: rgba(0, 210, 255, 0.15);
+    --accent-hover: #00b8e6;
+    --accent-gradient: linear-gradient(135deg, #00d2ff, #7b2ff7);
+    --success: #00e68a;
+    --warning: #ffb347;
+    --danger: #ff4d6a;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 30px rgba(0, 210, 255, 0.1);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.resume-builder-page {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body.resume-builder-page::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 20% 50%, rgba(0, 210, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(123, 47, 247, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ---------- Top Navigation ---------- */
+.rb-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-glass);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 100;
+}
+
+.rb-topbar .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.rb-topbar .logo img {
+    height: 36px;
+}
+
+.rb-topbar .logo span {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+}
+
+.rb-topbar .logo .highlight {
+    color: var(--accent);
+}
+
+.rb-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ---------- Main Layout (Split Screen) ---------- */
+.rb-container {
+    display: flex;
+    margin-top: 60px;
+    height: calc(100vh - 60px);
+    position: relative;
+    z-index: 1;
+}
+
+.rb-form-panel {
+    width: 50%;
+    overflow-y: auto;
+    padding: 24px 20px 40px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,210,255,0.2) transparent;
+}
+
+.rb-form-panel::-webkit-scrollbar {
+    width: 6px;
+}
+.rb-form-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+.rb-form-panel::-webkit-scrollbar-thumb {
+    background: rgba(0,210,255,0.2);
+    border-radius: 3px;
+}
+
+.rb-preview-panel {
+    width: 50%;
+    background: #f5f5f5;
+    border-left: 1px solid var(--border-glass);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------- Preview Panel ---------- */
+.rb-preview-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(10, 10, 15, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.rb-template-switcher {
+    display: flex;
+    gap: 6px;
+}
+
+.rb-template-btn {
+    padding: 6px 14px;
+    border: 1px solid var(--border-glass);
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.rb-template-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.rb-template-btn.active {
+    background: linear-gradient(135deg, rgba(0, 210, 255, 0.2), rgba(123, 47, 247, 0.2));
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+    box-shadow: 0 0 12px rgba(0, 210, 255, 0.25);
+}
+
+.rb-preview-frame {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px 24px 60px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: #080811;
+    background-image: 
+        radial-gradient(ellipse at 50% 10%, rgba(0, 210, 255, 0.05) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 90%, rgba(123, 47, 247, 0.05) 0%, transparent 60%);
+}
+
+.rb-preview-frame::-webkit-scrollbar {
+    width: 8px;
+}
+
+.rb-preview-frame::-webkit-scrollbar-track {
+    background: rgba(10, 10, 20, 0.5);
+}
+
+.rb-preview-frame::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+.rb-preview-frame::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 210, 255, 0.4);
+}
+
+.rb-preview-content {
+    width: 100%;
+    max-width: 790px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.5),
+        0 5px 15px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.12);
+    min-height: 1050px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.rb-preview-content:hover {
+    box-shadow: 
+        0 20px 45px rgba(0, 0, 0, 0.6),
+        0 8px 25px rgba(0, 210, 255, 0.15),
+        0 0 0 1px rgba(0, 210, 255, 0.3);
+}
+
+.rb-preview-content iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 1050px;
+    border: none;
+    display: block;
+    background-color: #ffffff;
+    color-scheme: light;
+    transition: opacity 0.25s ease;
+}
+
+.rb-preview-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 450px;
+    color: var(--text-muted);
+    font-size: 14px;
+    gap: 16px;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.rb-preview-empty .icon {
+    font-size: 54px;
+    opacity: 0.4;
+    filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.2));
+    animation: float-icon 3s ease-in-out infinite;
+}
+
+@keyframes float-icon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* ---------- Step Navigation ---------- */
+.rb-steps {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.rb-step-btn {
+    padding: 8px 14px;
+    border: 1px solid var(--border-glass);
+    background: var(--bg-glass);
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.rb-step-btn:hover {
+    border-color: rgba(0, 210, 255, 0.3);
+    color: var(--text-primary);
+}
+
+.rb-step-btn.active {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.rb-step-btn.completed {
+    border-color: rgba(0, 230, 138, 0.3);
+    color: var(--success);
+}
+
+.rb-step-btn.completed::before {
+    content: '✓ ';
+}
+
+/* ---------- Form Sections ---------- */
+.rb-section {
+    display: none;
+    animation: fadeInUp 0.35s ease;
+}
+
+.rb-section.active {
+    display: block;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rb-section-header {
+    margin-bottom: 16px;
+}
+
+.rb-section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.rb-section-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ---------- Form Card ---------- */
+.rb-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    margin-bottom: 14px;
+    backdrop-filter: blur(10px);
+    transition: var(--transition);
+}
+
+.rb-card:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.rb-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.rb-card-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.rb-card-actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* ---------- Form Inputs ---------- */
+.rb-form-group {
+    margin-bottom: 12px;
+}
+
+.rb-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.rb-form-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+}
+
+.rb-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rb-input,
+.rb-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    transition: var(--transition);
+    outline: none;
+}
+
+.rb-input::placeholder,
+.rb-textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.rb-input:focus,
+.rb-textarea:focus {
+    border-color: var(--border-active);
+    background: rgba(0, 210, 255, 0.03);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.rb-textarea {
+    min-height: 80px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+/* ---------- Tag Input (Skills) ---------- */
+.rb-tag-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 10px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-sm);
+    min-height: 42px;
+    cursor: text;
+    transition: var(--transition);
+}
+
+.rb-tag-input-container:focus-within {
+    border-color: var(--border-active);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.rb-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    background: var(--accent-glow);
+    border: 1px solid rgba(0, 210, 255, 0.2);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--accent);
+    animation: tagPop 0.2s ease;
+}
+
+@keyframes tagPop {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.rb-tag-remove {
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.rb-tag-remove:hover {
+    opacity: 1;
+}
+
+.rb-tag-input {
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+    flex: 1;
+    min-width: 100px;
+}
+
+.rb-tag-input::placeholder {
+    color: var(--text-muted);
+}
+
+/* ---------- Buttons ---------- */
+.rb-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rb-btn-primary {
+    background: var(--accent-gradient);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 210, 255, 0.25);
+}
+
+.rb-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 25px rgba(0, 210, 255, 0.35);
+}
+
+.rb-btn-secondary {
+    background: var(--bg-input);
+    border: 1px solid var(--border-glass);
+    color: var(--text-secondary);
+}
+
+.rb-btn-secondary:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-primary);
+}
+
+.rb-btn-ai {
+    background: linear-gradient(135deg, rgba(123, 47, 247, 0.2), rgba(0, 210, 255, 0.2));
+    border: 1px solid rgba(123, 47, 247, 0.3);
+    color: #c084fc;
+    font-size: 12px;
+    padding: 6px 12px;
+}
+
+.rb-btn-ai:hover {
+    background: linear-gradient(135deg, rgba(123, 47, 247, 0.3), rgba(0, 210, 255, 0.3));
+    border-color: rgba(123, 47, 247, 0.5);
+    color: #d8b4fe;
+}
+
+.rb-btn-ai.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.rb-btn-ai.loading::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(192, 132, 252, 0.3);
+    border-top-color: #c084fc;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.rb-btn-danger {
+    background: rgba(255, 77, 106, 0.1);
+    border: 1px solid rgba(255, 77, 106, 0.2);
+    color: var(--danger);
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.rb-btn-danger:hover {
+    background: rgba(255, 77, 106, 0.2);
+}
+
+.rb-btn-add {
+    background: var(--bg-glass);
+    border: 1px dashed var(--border-glass);
+    color: var(--text-secondary);
+    width: 100%;
+    padding: 12px;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+}
+
+.rb-btn-add:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-glow);
+}
+
+.rb-btn-download {
+    background: var(--accent-gradient);
+    color: #fff;
+    padding: 8px 18px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0, 210, 255, 0.25);
+}
+
+.rb-btn-download:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 25px rgba(0, 210, 255, 0.35);
+}
+
+/* ---------- Dynamic Entry ---------- */
+.rb-dynamic-entry {
+    position: relative;
+    margin-bottom: 14px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    animation: fadeInUp 0.3s ease;
+}
+
+.rb-dynamic-entry .rb-entry-remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.rb-dynamic-entry .rb-entry-number {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ---------- AI Suggestion Toast ---------- */
+.rb-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    max-width: 400px;
+    background: rgba(20, 20, 35, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(123, 47, 247, 0.3);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    color: var(--text-primary);
+    z-index: 200;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    animation: toastIn 0.4s ease;
+    display: none;
+}
+
+.rb-toast.show {
+    display: block;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.rb-toast-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.rb-toast-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #c084fc;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rb-toast-close {
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 18px;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.rb-toast-close:hover {
+    color: var(--text-primary);
+}
+
+.rb-toast-body {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+/* ---------- Step Navigation Buttons ---------- */
+.rb-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-glass);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+    .rb-container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .rb-form-panel,
+    .rb-preview-panel {
+        width: 100%;
+    }
+
+    .rb-preview-panel {
+        border-left: none;
+        border-top: 1px solid var(--border-glass);
+        min-height: 600px;
+    }
+
+    .rb-form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .rb-form-row-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .rb-topbar {
+        padding: 0 12px;
+    }
+
+    .rb-form-panel {
+        padding: 16px 12px 30px;
+    }
+
+    .rb-steps {
+        gap: 3px;
+    }
+
+    .rb-step-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+
+    .rb-card {
+        padding: 14px;
+    }
+
+    .rb-toast {
+        left: 12px;
+        right: 12px;
+        max-width: none;
+    }
+}

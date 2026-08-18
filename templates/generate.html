@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Resume Generator — CareerMate.AI</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    overflow: hidden;
+  }
+  #background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    object-fit: cover;
+    opacity: 0.6;
+  }
+  #content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    margin: 50px auto;
+    border-radius: 30px;
+    background-color: rgba(26, 26, 26, 0.8);
+    width: 40%;
+  }
+
+  .image {
+    width: 300px;
+    height: 300px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+  }
+ 
+  #submit-btn-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  #submit-btn {
+    border-radius: 15px;
+    background-color: aqua;
+    width: 20%;
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: bold;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+  #submit-btn:hover {
+    background-color: #000;
+    color: aqua;
+  }
+  #chat-section {
+      margin-top: 20px;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 10px;
+      width: 50%;
+      margin: 0 auto;
+      color: white;
+      font-weight: bold;
+      height: 600px;
+      overflow-y: scroll; 
+      scrollbar-width: none;
+     -ms-overflow-style: none; 
+    }
+    #chat-section::-webkit-scrollbar {
+  display: none;
+}
+    #input-form {
+      background-color: rgba(70, 70, 70, 0.4);
+      border-radius: 15px;
+      padding: 20px;
+
+    }
+    #input-form input[type="text"],
+    #input-form input[type="email"],
+    #input-form textarea {
+      width: 95%;
+      padding: 10px;
+      color: #ffffff;
+
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+    #input-form textarea {
+      height: 100px; /* Adjust the height for the textareas */
+    }
+
+    .centered-text {
+    text-align: center;
+    font-size: 15px;
+  }
+
+  /* Style the container for the text */
+  #text-container {
+    margin-top: 20px; 
+    margin-bottom: 20px;
+  }
+  #myModal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    #myModal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    /* Style for the modal content */
+    #modal-content {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      text-align: center;
+      border-radius: 15px;
+    }
+
+    /* Style for the close button */
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* Style for buttons inside the modal */
+    .modal-button {
+      height: 400px;
+      width: 300px;
+      border-radius: 15px;
+      margin: 10px;
+      display: inline-block;
+    }
+</style>
+</head>
+<body>
+<video id="background-video" autoplay muted loop>
+  <source src="static/assets/predict.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<style>
+  .ai-btn {
+    background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .ai-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 210, 255, 0.4);
+  }
+  .ai-btn.loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .field-with-ai {
+    margin-bottom: 15px;
+  }
+  .field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  #suggestions-panel {
+    display: none;
+    background: rgba(20, 20, 35, 0.95);
+    border: 1px solid rgba(0, 210, 255, 0.4);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 20px auto;
+    width: 50%;
+    color: #e8e8f0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.3s ease;
+  }
+  #suggestions-panel .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+  }
+  #suggestions-panel .title {
+    color: #00d2ff;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  #suggestions-panel .close-btn {
+    cursor: pointer;
+    color: #888;
+    font-size: 18px;
+  }
+  #suggestions-panel .close-btn:hover {
+    color: #fff;
+  }
+  #suggestions-panel ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  #suggestions-panel li {
+    font-size: 13px;
+    color: #ccc;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div id="content-container">
+  <div>
+    <img class='image' src="static/assets/gen.png" alt="Image">
+  </div>
+</div>
+<div id="text-container" class="centered-text">
+  <p>
+    Fill the details below and generate your resume with CareerMate.AI
+  </p>
+  <button type="button" class="ai-btn" onclick="fetchSuggestions()" style="margin-top: 10px;">💡 Get AI Suggestions for Resume</button>
+</div>
+
+<!-- Dismissible Suggestions Panel -->
+<div id="suggestions-panel">
+  <div class="header">
+    <span class="title">💡 AI Resume Recommendations</span>
+    <span class="close-btn" onclick="document.getElementById('suggestions-panel').style.display='none'">✕</span>
+  </div>
+  <ul id="suggestions-list"></ul>
+</div>
+
+<form action="/generatepdf" method="POST">
+  <div id="chat-section">
+    <div id="input-form">
+      <input type="text" id="name" name="Name" placeholder="Name" required>
+      <input type="email" id="Email" name="Email" placeholder="Email" required>
+      <input type="text" id="LinkedIn" name="LinkedIn" placeholder="LinkedIn">
+      
+      <div class="field-with-ai">
+        <div class="field-header">
+          <label style="font-size: 12px; color: #aaa;">Experience</label>
+          <button type="button" class="ai-btn" onclick="generateBullets('Experience', 'Experience')">✨ AI Generate</button>
+        </div>
+        <textarea id="Experience" name="Experience" placeholder="Describe work experience or years in role..." required></textarea>
+      </div>
+
+      <input type="text" id="Graduation" name="Graduation" placeholder="Graduation in Degree" required>
+      <input type="text" id="CGPA" name="CGPA" placeholder="Graduation CGPA" required>
+      <input type="text" id="University" name="University" placeholder="University Name" required>
+      <textarea id="Skills" name="Skills" placeholder="Skills (Max 1000 Characters)" required></textarea>
+
+      <div class="field-with-ai">
+        <div class="field-header">
+          <label style="font-size: 12px; color: #aaa;">Projects</label>
+          <button type="button" class="ai-btn" onclick="generateBullets('Projects', 'projects')">✨ AI Generate</button>
+        </div>
+        <textarea id="projects" name="projects" placeholder="Project details & technologies..." required></textarea>
+      </div>
+
+      <div class="field-with-ai">
+        <div class="field-header">
+          <label style="font-size: 12px; color: #aaa;">Internship</label>
+          <button type="button" class="ai-btn" onclick="generateBullets('Internship', 'Internship')">✨ AI Generate</button>
+        </div>
+        <textarea id="Internship" name="Internship" placeholder="Internship roles & responsibilities..." required></textarea>
+      </div>
+
+      <textarea id="Achievements" name="Achievements" placeholder="Achievements (Max 1000 Characters)" required></textarea>
+      <input type="text" id="course1" name="course1" placeholder="Course 1" required>
+      <input type="text" id="course2" name="course2" placeholder="Course 2" >
+      <input type="text" id="course3" name="course3" placeholder="Course 3" >
+    </div>
+  </div>
+  <div id="submit-btn-container">
+    <button id="submit-btn" type="submit">Generate</button>
+  </div>
+</form>
+
+<script>
+async function generateBullets(fieldName, textareaId) {
+  const textarea = document.getElementById(textareaId);
+  const btn = event?.target;
+  if (!textarea) return;
+
+  const rawNotes = textarea.value.trim();
+  const roleOrProject = fieldName;
+
+  if (btn) {
+    btn.classList.add('loading');
+    btn.textContent = 'Generating...';
+  }
+
+  try {
+    const res = await fetch('/resume/ai/bullet-points', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role_or_project: roleOrProject, raw_notes: rawNotes })
+    });
+
+    const data = await res.json();
+    if (data.bullets && data.bullets.length > 0) {
+      textarea.value = data.bullets.map(b => `• ${b}`).join('\n');
+    } else if (data.text) {
+      textarea.value = data.text;
+    }
+  } catch (err) {
+    alert('AI generation failed. Please try again.');
+  } finally {
+    if (btn) {
+      btn.classList.remove('loading');
+      btn.textContent = '✨ AI Generate';
+    }
+  }
+}
+
+async function fetchSuggestions() {
+  const panel = document.getElementById('suggestions-panel');
+  const list = document.getElementById('suggestions-list');
+  const btn = event?.target;
+
+  if (btn) {
+    btn.classList.add('loading');
+    btn.textContent = 'Analyzing...';
+  }
+
+  const resumeData = {
+    Name: document.getElementById('name')?.value || '',
+    Email: document.getElementById('Email')?.value || '',
+    LinkedIn: document.getElementById('LinkedIn')?.value || '',
+    Experience: document.getElementById('Experience')?.value || '',
+    Skills: document.getElementById('Skills')?.value || '',
+    projects: document.getElementById('projects')?.value || '',
+    Internship: document.getElementById('Internship')?.value || '',
+    Achievements: document.getElementById('Achievements')?.value || ''
+  };
+
+  try {
+    const res = await fetch('/resume/ai/suggestions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ resume_data: resumeData })
+    });
+
+    const data = await res.json();
+    if (data.suggestions && data.suggestions.length > 0) {
+      list.innerHTML = data.suggestions.map(s => `<li>${s}</li>`).join('');
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth' });
+    }
+  } catch (err) {
+    alert('Unable to load AI suggestions at this time.');
+  } finally {
+    if (btn) {
+      btn.classList.remove('loading');
+      btn.textContent = '💡 Get AI Suggestions for Resume';
+    }
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerMate.AI — Next-Gen AI Career & Interview Intelligence</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/front.css') }}">
+</head>
+<body>
+
+  <!-- Sticky Glassmorphic Navigation -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo">
+        <span>CareerMate<span class="brand-ai">.AI</span></span>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <nav>
+        <ul class="nav-menu">
+          <li>
+            <a href="/dashboard" class="nav-link active-link">📊 Dashboard</a>
+          </li>
+
+          <!-- Dropdown 1: Resume & ATS -->
+          <li class="nav-item-dropdown">
+            <button class="nav-link" type="button">
+              <span>📄 Resume & ATS</span>
+              <span class="nav-chevron">▼</span>
+            </button>
+            <div class="dropdown-menu">
+              <a href="/ats" class="dropdown-item">
+                <span class="drop-icon">🔍</span>
+                <div>
+                  <div class="drop-title">ATS Resume Scanner</div>
+                  <div class="drop-desc">Check ATS parsing & score breakdown</div>
+                </div>
+              </a>
+              <a href="/job-match" class="dropdown-item">
+                <span class="drop-icon">💼</span>
+                <div>
+                  <div class="drop-title">Job Description Matcher</div>
+                  <div class="drop-desc">Compare resume against job requirements</div>
+                </div>
+              </a>
+              <a href="/resume/builder" class="dropdown-item">
+                <span class="drop-icon">🛠️</span>
+                <div>
+                  <div class="drop-title">AI Resume Builder</div>
+                  <div class="drop-desc">Modern templates & PDF export</div>
+                </div>
+              </a>
+            </div>
+          </li>
+
+          <!-- Dropdown 2: Interviews -->
+          <li class="nav-item-dropdown">
+            <button class="nav-link" type="button">
+              <span>🎙️ Interviews</span>
+              <span class="nav-chevron">▼</span>
+            </button>
+            <div class="dropdown-menu">
+              <a href="/interview-sim" class="dropdown-item">
+                <span class="drop-icon">🎙️</span>
+                <div>
+                  <div class="drop-title">AI Mock Simulator</div>
+                  <div class="drop-desc">Live practice with 4-tier rubric feedback</div>
+                </div>
+              </a>
+              <a href="/predict" class="dropdown-item">
+                <span class="drop-icon">🎯</span>
+                <div>
+                  <div class="drop-title">Question Predictor 2.0</div>
+                  <div class="drop-desc">Questions tailored to your uploaded resume</div>
+                </div>
+              </a>
+              <a href="/interview-prep" class="dropdown-item">
+                <span class="drop-icon">📚</span>
+                <div>
+                  <div class="drop-title">AI Interview Prep Hub</div>
+                  <div class="drop-desc">Technical & HR question banks</div>
+                </div>
+              </a>
+            </div>
+          </li>
+
+          <!-- Dropdown 3: Career Tracks -->
+          <li class="nav-item-dropdown">
+            <button class="nav-link" type="button">
+              <span>🗺️ Career Tracks</span>
+              <span class="nav-chevron">▼</span>
+            </button>
+            <div class="dropdown-menu">
+              <a href="/skill-gap" class="dropdown-item">
+                <span class="drop-icon">📊</span>
+                <div>
+                  <div class="drop-title">Skill Gap Analyzer</div>
+                  <div class="drop-desc">Skill coverage % & Learn Next priority</div>
+                </div>
+              </a>
+              <a href="/github-analyzer" class="dropdown-item">
+                <span class="drop-icon">🐙</span>
+                <div>
+                  <div class="drop-title">GitHub Profile Audit</div>
+                  <div class="drop-desc">Repo health & AI resume bullets</div>
+                </div>
+              </a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Right Action Area -->
+      <div class="nav-cta-group">
+        {% if current_user.is_authenticated %}
+          <a href="/history" class="nav-link">📂 History</a>
+          <span style="color: #00e68a; font-size: 13px; font-weight: 600;">👤 {{ current_user.name or current_user.email }}</span>
+          <a href="/logout" class="btn-nav-signin" style="color: #ff99aa;">Sign Out</a>
+        {% else %}
+          <a href="/login" class="btn-nav-signin">Sign In</a>
+          <a href="/register" class="btn-nav-primary">⚡ Get Started</a>
+        {% endif %}
+        <button class="mobile-toggle-btn" type="button" onclick="toggleMobileNav()" aria-label="Toggle navigation">☰</button>
+      </div>
+    </div>
+
+    <!-- Mobile Slide Drawer -->
+    <div class="mobile-nav-drawer" id="mobileDrawer">
+      <div class="mobile-nav-links">
+        <div class="mobile-link-group">
+          <a href="/dashboard">📊 Dashboard</a>
+          {% if current_user.is_authenticated %}
+            <a href="/history">📂 History Hub</a>
+          {% endif %}
+        </div>
+
+        <div class="mobile-link-group">
+          <div class="mobile-group-title">Resume & ATS</div>
+          <a href="/ats">🔍 ATS Resume Scanner</a>
+          <a href="/job-match">💼 Job Description Matcher</a>
+          <a href="/resume/builder">🛠️ AI Resume Builder</a>
+        </div>
+
+        <div class="mobile-link-group">
+          <div class="mobile-group-title">Interviews</div>
+          <a href="/interview-sim">🎙️ AI Mock Simulator</a>
+          <a href="/predict">🎯 Question Predictor</a>
+          <a href="/interview-prep">📚 AI Interview Prep</a>
+        </div>
+
+        <div class="mobile-link-group">
+          <div class="mobile-group-title">Career Tracks</div>
+          <a href="/skill-gap">📊 Skill Gap Analyzer</a>
+          <a href="/github-analyzer">🐙 GitHub Profile Audit</a>
+        </div>
+      </div>
+
+      {% if not current_user.is_authenticated %}
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+          <a href="/login" class="btn-nav-signin" style="flex: 1; text-align: center; border: 1px solid var(--border-glass);">Sign In</a>
+          <a href="/register" class="btn-nav-primary" style="flex: 1; text-align: center;">Get Started</a>
+        </div>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-wrapper">
+    <video autoplay loop muted playsinline class="hero-video-bg">
+      <source src="{{ url_for('static', filename='assets/video2.mp4') }}" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <div class="hero-pill-badge">
+        <span>⚡</span>
+        <span>AI-Powered Career Intelligence Platform</span>
+      </div>
+
+      <h1 class="hero-heading">
+        Supercharge Your Career with <br>
+        <span class="gradient-text">Intelligent AI Engineering</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        From ATS resume auditing and real-time mock interview simulations to role-based skill gap analysis, recruiter-ready resume building, and GitHub repo reviews.
+      </p>
+
+      <div class="hero-actions">
+        <a href="/dashboard" class="btn-hero-primary">
+          <span>🚀 Explore Career Dashboard</span>
+          <span>→</span>
+        </a>
+        <a href="/resume/builder" class="btn-hero-secondary">
+          <span>🛠 Open Resume Builder</span>
+        </a>
+      </div>
+
+      <!-- Quick Platform Metrics Bar -->
+      <div class="hero-stats-row">
+        <div class="stat-item">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">ATS Compatibility</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">4-Tier</div>
+          <div class="stat-label">Rubric AI Feedback</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">AI Audit</div>
+          <div class="stat-label">GitHub Health Review</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">Instant</div>
+          <div class="stat-label">Skill Gap Analysis</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Features Showcase Grid -->
+  <section class="features-section" id="features">
+    <div class="section-header">
+      <span class="section-tag">Comprehensive Toolkit</span>
+      <h2 class="section-title">Everything You Need to Land Your Dream Role</h2>
+      <p class="section-desc">Modular, recruiter-grade engines engineered to elevate every aspect of your job hunt.</p>
+    </div>
+
+    <div class="feature-cards-grid">
+
+      <!-- Feature 1: ATS Resume Analyzer -->
+      <div class="feature-box">
+        <div>
+          <div class="feature-icon-bubble">📄</div>
+          <h3 class="feature-box-title">ATS Resume Scanner</h3>
+          <p class="feature-box-desc">
+            Instantly parse and evaluate your PDF resume for ATS parsing accuracy, section completeness, action verb strength, and keyword density.
+          </p>
+        </div>
+        <a href="/ats" class="feature-link-btn">Analyze Resume ATS Score →</a>
+      </div>
+
+      <!-- Feature 2: AI Resume Builder -->
+      <div class="feature-box">
+        <div>
+          <div class="feature-icon-bubble">🛠️</div>
+          <h3 class="feature-box-title">AI Resume Builder</h3>
+          <p class="feature-box-desc">
+            Build recruiter-ready resumes with Modern, Minimal, and Technical design templates, AI STAR bullet generators, and instant PDF downloads.
+          </p>
+        </div>
+        <a href="/resume/builder" class="feature-link-btn">Launch Resume Builder →</a>
+      </div>
+
+      <!-- Feature 3: Mock Interview Simulator -->
+      <div class="feature-box">
+        <div>
+          <div class="feature-icon-bubble">🎙️</div>
+          <h3 class="feature-box-title">AI Mock Simulator</h3>
+          <p class="feature-box-desc">
+            Practice live interview questions with an AI interviewer and receive 4-dimension scoring on technical clarity, communication, STAR structure, and confidence.
+          </p>
+        </div>
+        <a href="/interview-sim" class="feature-link-btn">Start Mock Interview Session →</a>
+      </div>
+
+      <!-- Feature 4: Question Predictor -->
+      <div class="feature-box">
+        <div>
+          <div class="feature-icon-bubble">🎯</div>
+          <h3 class="feature-box-title">Question Predictor 2.0</h3>
+          <p class="feature-box-desc">
+            Generate role-specific and resume-aware interview questions referencing your actual projects and work experience with sample answers.
+          </p>
+        </div>
+        <a href="/predict" class="feature-link-btn">Predict Interview Questions →</a>
+      </div>
+
+      <!-- Feature 5: Skill Gap Analyzer -->
+      <div class="feature-box">
+        <div>
+          <div class="feature-icon-bubble">📊</div>
+          <h3 class="feature-box-title">Skill Gap Analyzer</h3>
+          <p class="feature-box-desc">
+            Benchmark your current skills against industry requirements for Python, ML, Web, and Data careers with prioritized Learn Next actions.
+          </p>
+        </div>
+        <a href="/skill-gap" class="feature-link-btn">Analyze Skill Gap →</a>
+      </div>
+
+      <!-- Feature 6: GitHub Portfolio Auditor -->
+      <div class="feature-box">
+        <div>
+          <div class="feature-icon-bubble">🐙</div>
+          <h3 class="feature-box-title">GitHub Portfolio Audit</h3>
+          <p class="feature-box-desc">
+            Audit your public GitHub presence for commit velocity, documentation health, and generate high-impact AI resume bullets for top repositories.
+          </p>
+        </div>
+        <a href="/github-analyzer" class="feature-link-btn">Audit GitHub Profile →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Modern Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="/" class="brand-logo">
+          <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo">
+          <span>CareerMate<span class="brand-ai">.AI</span></span>
+        </a>
+        <p>The all-in-one AI career intelligence suite for software engineers, data scientists, and tech professionals.</p>
+      </div>
+
+      <div class="footer-nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/ats">ATS Scanner</a>
+        <a href="/resume/builder">Resume Builder</a>
+        <a href="/interview-sim">Mock Simulator</a>
+        <a href="/skill-gap">Skill Gap</a>
+        <a href="/github-analyzer">GitHub Audit</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2026 CareerMate.AI. All rights reserved.</span>
+      <span>Empowering developers worldwide with AI career intelligence.</span>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMobileNav() {
+      const drawer = document.getElementById('mobileDrawer');
+      if (drawer) {
+        drawer.classList.toggle('open');
+      }
+    }
+  </script>
+
+</body>
+</html>

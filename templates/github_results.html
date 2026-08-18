@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ profile.username }} — GitHub Portfolio Evaluation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #0a0a0f;
+      color: #e8e8f0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 15% 25%, rgba(0, 210, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 75%, rgba(123, 47, 247, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .logo-link img {
+      height: 36px;
+    }
+
+    /* Profile Header Card */
+    .profile-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .profile-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .avatar-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid #00d2ff;
+      box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+    }
+    .profile-name {
+      font-size: 22px;
+      color: #fff;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .profile-handle {
+      color: #00d2ff;
+      font-size: 14px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .profile-bio {
+      color: #94a3b8;
+      font-size: 13.5px;
+      margin-top: 6px;
+      max-width: 500px;
+      line-height: 1.4;
+    }
+    .profile-meta-tags {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    /* Scores Grid */
+    .scores-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 2.8fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 768px) {
+      .scores-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .overall-box {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .score-circle {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 30px;
+      margin-bottom: 12px;
+      box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+    }
+    .score-high {
+      background: radial-gradient(circle, rgba(0, 230, 138, 0.2) 0%, rgba(10, 10, 15, 0.9) 100%);
+      border: 4px solid #00e68a;
+      color: #00e68a;
+    }
+    .score-med {
+      background: radial-gradient(circle, rgba(255, 179, 71, 0.2) 0%, rgba(10, 10, 15, 0.9) 100%);
+      border: 4px solid #ffb347;
+      color: #ffb347;
+    }
+    .score-low {
+      background: radial-gradient(circle, rgba(255, 77, 106, 0.2) 0%, rgba(10, 10, 15, 0.9) 100%);
+      border: 4px solid #ff4d6a;
+      color: #ff4d6a;
+    }
+    .score-circle span.label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.8;
+    }
+    .verdict-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e2e8f0;
+      line-height: 1.4;
+    }
+
+    .sub-scores-panel {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+    .sub-metric {
+      margin-bottom: 14px;
+    }
+    .sub-metric:last-child {
+      margin-bottom: 0;
+    }
+    .sub-metric-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #cbd5e1;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+    }
+
+    /* Highlighted Repositories Section */
+    .highlighted-section {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(0, 210, 255, 0.35);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+    }
+    .highlight-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .highlight-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #00d2ff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .highlight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .highlight-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .highlight-card-top {
+      margin-bottom: 12px;
+    }
+    .hl-repo-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .hl-reason {
+      font-size: 12.5px;
+      color: #00e68a;
+      line-height: 1.4;
+      background: rgba(0, 230, 138, 0.1);
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      border-left: 3px solid #00e68a;
+    }
+    .bullet-box {
+      background: rgba(10, 15, 29, 0.95);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+      display: none;
+    }
+    .bullet-text {
+      font-size: 12px;
+      color: #e2e8f0;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .btn-copy {
+      background: rgba(0, 210, 255, 0.2);
+      border: 1px solid #00d2ff;
+      color: #00d2ff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-gen-bullet {
+      background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+    .btn-gen-bullet:hover {
+      opacity: 0.9;
+    }
+
+    /* Repositories Table & Cards */
+    .repos-section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .repo-card {
+      background: rgba(20, 20, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      transition: all 0.2s ease;
+    }
+    .repo-card:hover {
+      border-color: rgba(0, 210, 255, 0.35);
+    }
+    .repo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .repo-name-link {
+      font-size: 16px;
+      font-weight: 700;
+      color: #00d2ff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .repo-name-link:hover {
+      text-decoration: underline;
+    }
+    .repo-desc {
+      color: #cbd5e1;
+      font-size: 13.5px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .repo-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #94a3b8;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .repo-tags {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge-lang {
+      background: rgba(123, 47, 247, 0.2);
+      border: 1px solid rgba(123, 47, 247, 0.4);
+      color: #b18aff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .badge-activity {
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .flag-pill {
+      background: rgba(255, 77, 106, 0.15);
+      border: 1px solid rgba(255, 77, 106, 0.35);
+      color: #ff99aa;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* Actions Bar */
+    .actions-bar {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 36px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 26px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0, 210, 255, 0.25);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(0, 210, 255, 0.35);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e8e8f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header-bar">
+      <a href="/" class="logo-link">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo">
+        <span>CareerMate<span style="color: #00d2ff;">.AI</span></span>
+      </a>
+      <a href="/github-analyzer" class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;">🔍 Analyze Another Profile</a>
+    </div>
+
+    <!-- Profile Header Card -->
+    <div class="profile-card">
+      <div class="profile-left">
+        <img src="{{ profile.avatar_url }}" alt="Avatar" class="avatar-img">
+        <div>
+          <h1 class="profile-name">{{ profile.name }}</h1>
+          <a href="{{ profile.html_url }}" target="_blank" class="profile-handle">@{{ profile.username }} ↗</a>
+          <p class="profile-bio">{{ profile.bio }}</p>
+          <div class="profile-meta-tags">
+            <span>📦 {{ profile.public_repos }} Repos</span>
+            <span>👥 {{ profile.followers }} Followers</span>
+            <span>📍 {{ profile.location }}</span>
+            <span>🏢 {{ profile.company }}</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <a href="/resume/builder" class="btn btn-primary">🛠 Import to Resume Builder</a>
+      </div>
+    </div>
+
+    <!-- Scores Grid -->
+    {% set overall = eval_data.overall_score %}
+    <div class="scores-grid">
+      
+      <div class="overall-box">
+        <div class="score-circle {% if overall >= 75 %}score-high{% elif overall >= 45 %}score-med{% else %}score-low{% endif %}">
+          {{ overall }}%
+          <span class="label">GitHub Health</span>
+        </div>
+        <div class="verdict-text">{{ eval_data.summary_verdict }}</div>
+      </div>
+
+      <div class="sub-scores-panel">
+        
+        <div class="sub-metric">
+          <div class="sub-metric-header">
+            <span>⚡ Activity & Recency (Commit Velocity)</span>
+            <span style="color: #00d2ff;">{{ eval_data.activity_score }}%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: {{ eval_data.activity_score }}%;"></div>
+          </div>
+        </div>
+
+        <div class="sub-metric">
+          <div class="sub-metric-header">
+            <span>📚 Documentation Completeness (Descriptions & READMEs)</span>
+            <span style="color: #00d2ff;">{{ eval_data.documentation_score }}%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: {{ eval_data.documentation_score }}%;"></div>
+          </div>
+        </div>
+
+        <div class="sub-metric">
+          <div class="sub-metric-header">
+            <span>🌐 Language & Tech Diversity (Breadth)</span>
+            <span style="color: #00d2ff;">{{ eval_data.diversity_score }}%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: {{ eval_data.diversity_score }}%;"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Top Repositories to Highlight on Resume -->
+    {% if highlighted_repos %}
+    <div class="highlighted-section">
+      <div class="highlight-header">
+        <div class="highlight-title">
+          <span>🌟</span>
+          <span>Recommended Repositories to Highlight for {{ target_role }}</span>
+        </div>
+        <span style="font-size: 12px; color: #94a3b8;">Ranked by role relevance & open-source quality</span>
+      </div>
+
+      <div class="highlight-grid">
+        {% for hr in highlighted_repos %}
+        <div class="highlight-card">
+          <div class="highlight-card-top">
+            <div class="hl-repo-name">
+              <a href="{{ hr.html_url }}" target="_blank" style="color: #fff; text-decoration: none;">{{ hr.name }} ↗</a>
+              <span class="badge-lang">{{ hr.language }}</span>
+            </div>
+            <p class="hl-reason">💡 {{ hr.highlight_reason }}</p>
+            {% if hr.description %}
+              <p style="font-size: 12.5px; color: #cbd5e1; line-height: 1.4;">{{ hr.description }}</p>
+            {% endif %}
+          </div>
+
+          <div>
+            <button
+              type="button"
+              class="btn-gen-bullet"
+              onclick="generateResumeBullet('{{ hr.name }}', '{{ hr.description|replace("'", "\\'") }}', '{{ hr.language }}', '{{ target_role }}', 'bullet-box-{{ loop.index }}')"
+            >
+              ✨ Generate AI Resume Bullet
+            </button>
+
+            <div id="bullet-box-{{ loop.index }}" class="bullet-box">
+              <div class="bullet-text" id="bullet-text-{{ loop.index }}">Generating...</div>
+              <button type="button" class="btn-copy" onclick="copyBullet('bullet-text-{{ loop.index }}', this)">📋 Copy Bullet</button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Evaluated Repositories Table / Grid -->
+    <div class="repos-section-title">
+      <span>📂 All Evaluated Public Repositories ({{ eval_data.evaluated_repos|length }})</span>
+      <span style="font-size: 13px; color: #94a3b8; font-weight: normal;">
+        {{ eval_data.stats.documented_count }} Documented &bull; {{ eval_data.stats.missing_desc_count }} Need Attention
+      </span>
+    </div>
+
+    {% for repo in eval_data.evaluated_repos %}
+    <div class="repo-card">
+      <div class="repo-header">
+        <a href="{{ repo.html_url }}" target="_blank" class="repo-name-link">
+          <span>{{ repo.name }}</span>
+          <span style="font-size: 12px;">↗</span>
+        </a>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          {% for issue in repo.issues %}
+            <span class="flag-pill">⚠️ {{ issue }}</span>
+          {% endfor %}
+          {% if not repo.issues %}
+            <span style="font-size: 11px; font-weight: 700; color: #00e68a;">✓ Fully Documented</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <p class="repo-desc">
+        {% if repo.description %}
+          {{ repo.description }}
+        {% else %}
+          <em style="color: #ff99aa;">⚠️ No repository description provided. Adding a clear 1-2 sentence description increases recruiter engagement by 40%.</em>
+        {% endif %}
+      </p>
+
+      <div class="repo-meta-row">
+        <div class="repo-tags">
+          <span class="badge-lang">{{ repo.language }}</span>
+          <span class="badge-activity">{{ repo.activity_badge }}</span>
+          {% if repo.stars > 0 %}<span>⭐ {{ repo.stars }}</span>{% endif %}
+          {% if repo.forks > 0 %}<span>🍴 {{ repo.forks }}</span>{% endif %}
+        </div>
+        <div>
+          <span>Updated: {{ repo.updated_at[:10] }}</span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- Actions -->
+    <div class="actions-bar">
+      <a href="/resume/builder" class="btn btn-primary">🛠 Import Repos into Resume Builder</a>
+      <a href="/projects" class="btn btn-secondary">🚀 Recommended Projects</a>
+      <a href="/github-analyzer" class="btn btn-secondary">🔍 Analyze Another Profile</a>
+    </div>
+
+  </div>
+
+  <script>
+    async function generateResumeBullet(name, desc, lang, role, boxId) {
+      const box = document.getElementById(boxId);
+      const textEl = box.querySelector('.bullet-text');
+      box.style.display = 'block';
+      textEl.textContent = 'Generating AI bullet point...';
+
+      const formData = new FormData();
+      formData.append('repo_name', name);
+      formData.append('repo_desc', desc);
+      formData.append('repo_lang', lang);
+      formData.append('target_role', role);
+
+      try {
+        const resp = await fetch('/github-analyzer/generate-bullet', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await resp.json();
+        if (data.bullets && data.bullets.length > 0) {
+          textEl.textContent = data.bullets[0];
+        } else {
+          textEl.textContent = `Architected ${name} using ${lang}, establishing robust modular design patterns and clean documentation.`;
+        }
+      } catch (err) {
+        textEl.textContent = `Architected ${name} in ${lang} with clean Git workflow and production-oriented code structure.`;
+      }
+    }
+
+    function copyBullet(textId, btn) {
+      const text = document.getElementById(textId).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerText;
+        btn.innerText = '✓ Copied!';
+        btn.style.color = '#00e68a';
+        btn.style.borderColor = '#00e68a';
+        setTimeout(() => {
+          btn.innerText = orig;
+          btn.style.color = '#00d2ff';
+          btn.style.borderColor = '#00d2ff';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
