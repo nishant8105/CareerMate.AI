@@ -232,7 +232,7 @@
         <span style="color: #00d2ff;">⏱ In Session: <span id="timer-display">00:00</span></span>
       </div>
       <div class="progress-bar-bg">
-        <div class="progress-bar-fill" style="width: {{ progress.percent }}%;"></div>
+        <div class="progress-bar-fill" data-width="{{ progress.percent }}"></div>
       </div>
     </div>
 
@@ -284,6 +284,15 @@
   </div>
 
   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+        const targetWidth = bar.getAttribute('data-width') || '0';
+        setTimeout(() => {
+          bar.style.width = targetWidth + '%';
+        }, 80);
+      });
+    });
+
     function updateCount(textarea) {
       const text = textarea.value.trim();
       const words = text ? text.split(/\s+/).length : 0;

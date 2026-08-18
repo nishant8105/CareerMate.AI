@@ -416,7 +416,7 @@
           <span class="sub-card-score">{{ report.technical_clarity_avg|default(7.5) }} / 10</span>
         </div>
         <div class="progress-bar-bg">
-          <div class="progress-bar-fill" style="width: {{ (report.technical_clarity_avg|default(7.5) * 10)|round }}%;"></div>
+          <div class="progress-bar-fill" data-width="{{ (report.technical_clarity_avg|default(7.5) * 10)|round }}"></div>
         </div>
       </div>
 
@@ -426,7 +426,7 @@
           <span class="sub-card-score">{{ report.communication_avg|default(8.0) }} / 10</span>
         </div>
         <div class="progress-bar-bg">
-          <div class="progress-bar-fill" style="width: {{ (report.communication_avg|default(8.0) * 10)|round }}%;"></div>
+          <div class="progress-bar-fill" data-width="{{ (report.communication_avg|default(8.0) * 10)|round }}"></div>
         </div>
       </div>
 
@@ -436,7 +436,7 @@
           <span class="sub-card-score">{{ report.structure_avg|default(7.0) }} / 10</span>
         </div>
         <div class="progress-bar-bg">
-          <div class="progress-bar-fill" style="width: {{ (report.structure_avg|default(7.0) * 10)|round }}%;"></div>
+          <div class="progress-bar-fill" data-width="{{ (report.structure_avg|default(7.0) * 10)|round }}"></div>
         </div>
       </div>
 
@@ -446,7 +446,7 @@
           <span class="sub-card-score">{{ report.confidence_avg|default(7.5) }} / 10</span>
         </div>
         <div class="progress-bar-bg">
-          <div class="progress-bar-fill" style="width: {{ (report.confidence_avg|default(7.5) * 10)|round }}%;"></div>
+          <div class="progress-bar-fill" data-width="{{ (report.confidence_avg|default(7.5) * 10)|round }}"></div>
         </div>
       </div>
     </div>
@@ -558,6 +558,15 @@
   </div>
 
   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+        const targetWidth = bar.getAttribute('data-width') || '0';
+        setTimeout(() => {
+          bar.style.width = targetWidth + '%';
+        }, 100);
+      });
+    });
+
     function toggleDrawer(id) {
       const el = document.getElementById(id);
       if (el) {

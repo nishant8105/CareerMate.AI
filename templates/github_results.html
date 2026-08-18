@@ -488,7 +488,7 @@
             <span style="color: #00d2ff;">{{ eval_data.activity_score }}%</span>
           </div>
           <div class="progress-bar-bg">
-            <div class="progress-bar-fill" style="width: {{ eval_data.activity_score }}%;"></div>
+            <div class="progress-bar-fill" data-width="{{ eval_data.activity_score }}"></div>
           </div>
         </div>
 
@@ -498,7 +498,7 @@
             <span style="color: #00d2ff;">{{ eval_data.documentation_score }}%</span>
           </div>
           <div class="progress-bar-bg">
-            <div class="progress-bar-fill" style="width: {{ eval_data.documentation_score }}%;"></div>
+            <div class="progress-bar-fill" data-width="{{ eval_data.documentation_score }}"></div>
           </div>
         </div>
 
@@ -508,7 +508,7 @@
             <span style="color: #00d2ff;">{{ eval_data.diversity_score }}%</span>
           </div>
           <div class="progress-bar-bg">
-            <div class="progress-bar-fill" style="width: {{ eval_data.diversity_score }}%;"></div>
+            <div class="progress-bar-fill" data-width="{{ eval_data.diversity_score }}"></div>
           </div>
         </div>
 
@@ -544,7 +544,12 @@
             <button
               type="button"
               class="btn-gen-bullet"
-              onclick="generateResumeBullet('{{ hr.name }}', '{{ hr.description|replace("'", "\\'") }}', '{{ hr.language }}', '{{ target_role }}', 'bullet-box-{{ loop.index }}')"
+              data-name="{{ hr.name }}"
+              data-desc="{{ hr.description|default('', true)|e }}"
+              data-lang="{{ hr.language }}"
+              data-role="{{ target_role }}"
+              data-box="bullet-box-{{ loop.index }}"
+              onclick="onGenBulletClick(this)"
             >
               ✨ Generate AI Resume Bullet
             </button>
@@ -617,6 +622,24 @@
   </div>
 
   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+        const targetWidth = bar.getAttribute('data-width') || '0';
+        setTimeout(() => {
+          bar.style.width = targetWidth + '%';
+        }, 100);
+      });
+    });
+
+    function onGenBulletClick(btn) {
+      const name = btn.getAttribute('data-name');
+      const desc = btn.getAttribute('data-desc');
+      const lang = btn.getAttribute('data-lang');
+      const role = btn.getAttribute('data-role');
+      const boxId = btn.getAttribute('data-box');
+      generateResumeBullet(name, desc, lang, role, boxId);
+    }
+
     async function generateResumeBullet(name, desc, lang, role, boxId) {
       const box = document.getElementById(boxId);
       const textEl = box.querySelector('.bullet-text');
